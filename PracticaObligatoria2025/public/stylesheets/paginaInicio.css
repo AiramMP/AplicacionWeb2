@@ -1,0 +1,94 @@
+/* Estilo general para las pestañas */
+#login-tab, #register-tab {
+    background: rgb(180, 130, 124);
+    color: white;
+    border: none;
+}
+
+/* Estilo para la pestaña activa */
+.nav-link.active {
+    background: rgb(104, 69, 64) !important; 
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+}
+
+/* Estilo para la pestaña inactiva al pasar el cursor */
+.nav-link:not(.active):hover {
+    background: rgb(160, 110, 104); /* Color intermedio para hover */
+    color: white;
+}
+
+
+#login {
+    background-color:#282c34;
+    color: rgb(180, 130, 124);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(206, 197, 197, 0.5);
+    margin-top: 1%;
+    margin-bottom: 4%;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#formulariologin {
+    display: flex;
+    flex-direction: column;
+}
+#visibilidadlog {
+    cursor: pointer;
+    color: rgb(180, 130, 124);
+    font-weight: bold;
+}
+#Iniciar {
+    background-color: rgb(180, 130, 124);
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+#Iniciar:hover {
+    background-color: darkred;
+}
+#ErrorCorreoLog {
+    display: block;
+    margin-top: 5px;
+}
+
+#registrarse {
+    background-color: #282c34;
+    color: rgb(180, 130, 124);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    margin-top: 1%;
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#formularioSignIn {
+    display: flex;
+    flex-direction: column;
+}
+#visibilidad {
+    cursor: pointer;
+    color: rgb(180, 130, 124);
+    font-weight: bold;
+}
+
+#Registrar {
+    background-color: rgb(180, 130, 124);
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#Registrar:hover {
+    background-color: darkred;
+}
