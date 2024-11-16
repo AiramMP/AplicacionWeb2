@@ -1,0 +1,83 @@
+<div class="row border border-2 border-secondary mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light w-100"> <!-- Añadido w-100 para que ocupe todo el ancho -->
+        <div class="container-fluid p-0"> <!-- Usar container-fluid y remover padding -->
+            <button class="navbar-toggler mx-auto mb-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Menús fuera del menú hamburguesa -->
+                <ul class="navbar-nav justify-content-center w-100">
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Eventos</button>
+                        </form>   
+                    </li>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/misinscripciones" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Mis Inscripciones</button>
+                        </form>   
+                    </li>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/miperfil" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Mi Perfil</button>
+                        </form>   
+                    </li>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/misnotificaciones" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Mis Notificaciones</button>
+                        </form>   
+                    </li>
+                    <% if (rol === 'organizador') { %>
+                        <li class="nav-item mb-1 mx-4">
+                            <form action="/eventos/nuevo" method="GET" class="d-flex" role="search"> 
+                                <button type="submit" class="btn">Crear Evento</button>
+                            </form>   
+                        </li>
+                    <% } %>
+                    <li class="nav-item mb-1 mx-5 ms-auto"> <!-- Añadido ms-auto para empujar a la derecha -->
+                        <form action="/logout" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn" id="btnClose">Cerrar Sesión</button>
+                        </form>   
+                    </li>
+                </ul>
+                
+
+                <!-- Menús dentro del menú hamburguesa -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-lg-none align-self-center ">
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Eventos</button>
+                        </form>   
+                    </li>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/misinscripciones" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Mis Inscripciones</button>
+                        </form>   
+                    </li>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/miperfil" method="GET" class="d-flex" role="search">
+                            <button type="submit" class="btn">Mi Perfil</button>
+                        </form>   
+                    </li>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/usuarios/misnotificaciones" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Mis Notificaciones</button>
+                        </form>   
+                    </li>
+                    <% if (rol === 'organizador') { %>
+                        <li class="nav-item mb-1 mx-4">
+                            <form action="/eventos/nuevo" method="GET" class="d-flex" role="search"> 
+                                <button type="submit" class="btn">Crear Evento</button>
+                            </form>   
+                        </li>
+                    <% } %>
+                    <li class="nav-item mb-1 mx-4">
+                        <form action="/logout" method="GET" class="d-flex" role="search"> 
+                            <button type="submit" class="btn">Cerrar Sesión</button>
+                        </form>   
+                    </li>
+                </ul>
+            </div>
+        </div> 
+    </nav>
+</div>

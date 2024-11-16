@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/general.css">
+    <link rel="stylesheet" href="/stylesheets/pagInicio.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>Portal de Gestión de Eventos Universitarios</title>
+</head>
+<body>
+    <%- include('header'); %>
+
+    <div class="container-fluid mt-5">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Iniciar sesión</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#registrarse" type="button" role="tab" aria-controls="registrarse" aria-selected="false">Registrarse</button>
+            </li>
+        </ul>
+
+        <!-- Tab content -->
+        <div class="tab-content" id="myTabContent">
+            <!-- Formulario de Login -->
+            <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                <form id="formulariologin" method="POST" action="/login" class="mt-3">
+                    <div class="form-group w-50 mx-auto">
+                        <label for="Correo">Correo:</label>
+                        <input type="email" class="form-control" id="correolog" name="correo">
+                        <span id="ErrorCorreoLog" class="text-danger"></span>
+                    </div>
+                    <div class="form-group w-50 mx-auto">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" class="form-control" id="passwordlog" name="password">
+                        <span id="visibilidadlog" data-mostrar="false">Mostrar</span>
+                    </div>
+                    <div class="form-group w-50 mx-auto mt-2">
+                        <button type="submit" id="Iniciar" class="btn btn-dark">Iniciar sesión</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de Registro -->
+            <div class="tab-pane fade" id="registrarse" role="tabpanel" aria-labelledby="register-tab">
+                <form id="formularioSignIn" method="POST" action="/signin" class="mt-3">
+                    <div class="form-group w-50 mx-auto">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre">
+                        <span id="ErrorNombre" class="text-danger"></span>
+                    </div>
+                    <div class="form-group w-50 mx-auto">
+                        <label for="correo">Email:</label>
+                        <input type="email" class="form-control" id="correo" name="correo">
+                        <span id="ErrorCorreo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group w-50 mx-auto">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="phone" class="form-control" id="tlf" name="tlf">
+                        <span id="ErrorTlf" class="text-danger"></span>
+                    </div>
+                    <div class="form-group w-50 mx-auto">
+                        <label for="facultad">Facultad:</label>
+                        <select class="form-control" id="facultad" name="facultad">
+                            <option value="Bellas Artes">Facultad de Bellas Artes</option>
+                            <option value="Ciencias Biologicas">Facultad de Ciencias Biológicas</option>
+                            <option value="Ciencias de la Documentacion">Facultad de Ciencias de la Documentación</option>
+                            <option value="Ciencias de la informacion">Facultad de Ciencias de la información</option>
+                            <option value="Ciencias Economicas y Empresariales">Facultad de Ciencias Económicas y Empresariales</option>
+                            <option value="Ciencias Fisicas">Facultad de Ciencias Físicas</option>
+                            <option value="Ciencias Geologicas">Facultad de Ciencias Geológicas</option>
+                            <option value="Ciencias Matematicas">Facultad de Ciencias Matemáticas</option>
+                            <option value="Ciencias Politicas y Sociologia">Facultad de Ciencias Políticas y Sociología</option>
+                            <option value="Ciencias Quimicas">Facultad de Ciencias Químicas</option>
+                            <option value="Comercio y Turismo">Facultad de Comercio y Turismo</option>
+                            <option value="Derecho">Facultad de Derecho</option>
+                            <option value="Educacion">Facultad de Educación</option>
+                            <option value="Enfermeria, Fisioterapia y Podologia">Facultad de Enfermería, Fisioterapia y Podología</option>
+                            <option value="Estudios Estadisticos">Facultad de Estudios Estadísticos</option>
+                            <option value="Farmacia">Facultad de Farmacia</option>
+                            <option value="Filologia">Facultad de Filología</option>
+                            <option value="Filosofia">Facultad de Filosofía</option>
+                            <option value="Geografia e Historia">Facultad de Geografía e Historia</option>
+                            <option value="Informatica">Facultad de Informática</option>
+                            <option value="Medicina">Facultad de Medicina</option>
+                            <option value="Odontologia">Facultad de Odontología</option>
+                            <option value="Optica y Optometria">Facultad de Óptica y Optometría</option>
+                            <option value="Psicologia">Facultad de Psicología</option>
+                            <option value="Veterinaria">Facultad de Veterinaria</option>
+                        </select>
+                    </div>
+                    <div class="form-group w-50 mx-auto">
+                        <label for="rol">Rol:</label>
+                        <select class="form-control" id="rol" name="rol">
+                            <option value="organizador">Organizador</option>
+                            <option value="asistente">Asistente</option>
+                        </select>
+                    </div>
+                    <div class="form-group w-50 mx-auto">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                        <span id="visibilidad" data-mostrar="false">Mostrar</span>
+                        <span id="ErrorPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group w-50 mx-auto mt-2">
+                        <button type="submit" id="Registrar" class="btn btn-dark">Registrarse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('footer'); %>
+
+    <!-- Bootstrap JavaScript Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+<script src="/javascripts/pagInicio.js"></script>
+</html>

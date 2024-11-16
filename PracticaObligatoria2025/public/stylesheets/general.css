@@ -62,3 +62,43 @@ h1 {
   min-width: 40px;
   min-height: 40px;
 }
+
+.navbar-nav .btn {
+  background-color: #8a97a5;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar-nav .btn:hover {
+  background-color: #31363b;
+  transform: scale(1.05);
+  color: white;
+}
+
+
+.navbar-nav {
+  justify-content: center;
+
+}
+
+.nav-item {
+  margin: 0 10px;
+}
+
+#btnClose{
+  background-color: #99474b;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#btnClose:hover{
+  background-color: #992a2f;
+  color: white;
+  border-radius: 5px;
+  padding: 10px 15px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}

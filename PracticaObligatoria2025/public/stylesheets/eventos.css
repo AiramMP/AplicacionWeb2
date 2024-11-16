@@ -1,0 +1,15 @@
+.card{
+    background-color:#282c34;
+    color: rgb(180, 130, 124);
+    padding: 5px;
+    border-radius: 1px;
+    box-shadow: 0 0 10px rgba(206, 197, 197, 0.5);
+    margin-top: 0.5%;
+    margin-bottom: 0.5%;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.card-text{
+    font-size:1.5rem;
+}
