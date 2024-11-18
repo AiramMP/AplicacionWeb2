@@ -74,15 +74,13 @@ $(function(){
     
    
     $("#Iniciar").on('click', function (event) {
-        // Evitar el envío predeterminado del formulario
-        event.preventDefault();
+        event.preventDefault(); // Evitar el envío del formulario por defecto
     
         var correo = $("#correolog").val();
         var password = $("#passwordlog").val();
     
-        const expresionCorreo = /^[^@]+@ucm\.es$/; // Validación de correo
+        const expresionCorreo = /^[^@]+@ucm\.es$/;
     
-        // Limpiar mensajes de error previos
         $("#ErrorCorreoLog").text("");
     
         if (!expresionCorreo.test(correo)) {
@@ -90,10 +88,10 @@ $(function(){
         } else {
             $.ajax({
                 url: "/comprobarpassword",
-                method: "GET",
-                data: { correos: correo, passwords: password },
+                method: "POST", // Cambiado a POST
+                contentType: "application/json", // Indicamos que enviamos JSON
+                data: JSON.stringify({ correos: correo, passwords: password }), // Convertimos los datos a JSON
                 success: function (data) {
-                    // Si la respuesta es exitosa, envía el formulario
                     if (data && data.correo) {
                         $("#formulariologin").submit();
                     } else {
@@ -101,12 +99,12 @@ $(function(){
                     }
                 },
                 error: function (error) {
-                    // Manejar error del servidor (por ejemplo, código 400 o 500)
                     $("#ErrorCorreoLog").text("Contraseña equivocada o usuario no existente");
                 }
             });
         }
     });
+    
     
     
 

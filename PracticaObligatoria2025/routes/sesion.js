@@ -20,10 +20,10 @@ router.get('/existeUsuario',function(request,response){//Petición AJAX
   })
 });
 
-router.get('/comprobarpassword', function (request, response) {
-  console.log("Datos recibidos:", request.query);
+router.post('/comprobarpassword', function (request, response) {
+  console.log("Datos recibidos:", request.body); // Ahora se usa `request.body`
   const dao = request.daoSesiones;
-  dao.comprobarpassword(request.query.correos, request.query.passwords, function (err, data) {
+  dao.comprobarpassword(request.body.correos, request.body.passwords, function (err, data) {
       if (err) {
           console.error("Error en DAO:", err);
           response.status(500).send("Error interno del servidor");
@@ -39,6 +39,7 @@ router.get('/comprobarpassword', function (request, response) {
       }
   });
 });
+
 
 
 
