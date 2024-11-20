@@ -11,7 +11,6 @@ router.get('/', function(request, response){
         if(err){
             response.status(500);
             response.render('error',{
-                config:request.session.config,
                 foto:request.session.foto,
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
@@ -19,8 +18,9 @@ router.get('/', function(request, response){
                 error:"No se pudo cargar los eventos de la universidad"
             })
         }else{
+            console.log("Importante");
+            console.log(request.session);
             response.render('eventos', {eventos:datos,
-                config:request.session.config,
                 foto:request.session.foto,
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
@@ -48,7 +48,7 @@ router.get('/miperfil', function(request, response){
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
                 rol: request.session.rol,
-              });
+            });
         }
     });
 });

@@ -21,7 +21,6 @@ router.get('/existeUsuario',function(request,response){//Petición AJAX
 });
 
 router.post('/comprobarpassword', function (request, response) {
-  console.log("Datos recibidos:", request.body); // Ahora se usa `request.body`
   const dao = request.daoSesiones;
   dao.comprobarpassword(request.body.correos, request.body.passwords, function (err, data) {
       if (err) {
@@ -31,10 +30,10 @@ router.post('/comprobarpassword', function (request, response) {
           response.status(400).send("Contraseña equivocada o usuario no existente");
       } else {
           const user = data[0];
-          console.log("Usuario encontrado:", user);
           request.session.usuario = user.correo;
           request.session.foto = user.foto;
           request.session.nombre = user.nombre;
+          request.session.rol = user.rol;
           response.json(user);
       }
   });
@@ -43,45 +42,68 @@ router.post('/comprobarpassword', function (request, response) {
 
 
 
-router.post('/signin', function(request, response){
+router.post('/signin', function(request, response) {
   const dao = request.daoSesiones;
-  dao.anyadirUsuario(request.body.nombre, request.body.correo, request.body.tlf, request.body.facultad, request.body.rol, request.body.password, function(err){
-    if(err){
-      response.status(500);
-      response.render('error', {
-        config:request.session.config,
-        foto:request.session.foto,
-        nombre:request.session.nombre,
-        usuario:request.session.usuario,
-        rol: request.session.rol,
-        error:"No se pudo iniciar la sesion del usuario",
-        message: "Error al registrar usuario"
-      })
+
+  dao.anyadirUsuario(
+    request.body.nombre,
+    request.body.correo,
+    request.body.tlf,
+    request.body.facultad,
+    request.body.rol,
+    request.body.password,
+    function(err) {
+      if (err) {
+        console.error("Error al añadir usuario:", err);
+        response.status(500).render('error', {
+          foto: request.session.foto,
+          nombre: request.session.nombre,
+          usuario: request.session.usuario,
+          rol: request.session.rol,
+          error: "No se pudo registrar el usuario",
+          message: "Error al registrar usuario"
+        });
+      } else {
+        // Configurar la sesión
+        request.session.usuario = request.body.correo;
+        request.session.nombre = request.body.nombre;
+        request.session.rol = request.body.rol;
+        request.session.foto = null;
+
+        // Guardar la sesión
+        request.session.save((err) => {
+          if (err) {
+            console.error("Error al guardar la sesión:", err);
+            response.status(500).render('error', {
+              error: "No se pudo guardar la sesión",
+              message: "Error en el sistema de sesiones"
+            });
+          } else {
+            console.log("Sesión guardada correctamente:", request.session);
+            response.redirect('/usuarios/');
+          }
+        });
+      }
     }
-    else{
-      request.session.usuario = request.body.correo;
-      request.session.nombre = request.body.nombre;
-      request.session.rol = request.body.rol;
-      request.session.foto = null;
-      request.session.save((err) => {
-        if (err) console.error(err);
-        response.redirect('/usuarios/');
-      });
-      
-    }
-  })
+  );
 });
 
-router.post('/login', function(request, response){
+
+router.post('/login', function(request, response) {
+  console.log("Antes de guardar en sesión:", request.body);
+
   request.session.usuario = request.body.correo;
-  request.session.nombre = request.body.nombre;
-  request.session.rol = request.body.rol;
-  request.session.foto = request.body.foto;
+
   request.session.save((err) => {
-    if (err) console.error(err);
-    response.redirect('/usuarios/');
+      if (err) {
+          console.error("Error al guardar la sesión:", err);
+      } else {
+          console.log("Sesión guardada correctamente:", request.session);
+      }
+      response.redirect('/usuarios/');
   });
-})
+});
+
 
 router.get('/logout',function(request,response){
   request.session.destroy();

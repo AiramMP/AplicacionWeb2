@@ -41,8 +41,8 @@ const sessionStore = new MySQLStore({
 
 app.use(session({
   secret: 'viajaja',
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
   store: sessionStore
 }));
 

@@ -19,6 +19,7 @@ $(function(){
     })
     
     $("#Registrar").on('click', function () {
+        event.preventDefault();
         var check = true;
         var correo = $("#correo").val();
         var nombre = $("#nombre").val();
