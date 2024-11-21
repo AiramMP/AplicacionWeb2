@@ -43,7 +43,10 @@ app.use(session({
   secret: 'viajaja',
   resave: false,
   saveUninitialized: false,
-  store: sessionStore
+  store: sessionStore,
+  cookie: {
+    maxAge: 3600000 // 1 hora en milisegundos para la cookie
+  }
 }));
 
 const DAOUsuarios = require('./DAOUsuarios')
@@ -57,6 +60,12 @@ app.use((request, response, next) =>{
   request.daoUsuarios = daoUsuarios;
   next();
 });
+
+app.use((req, res, next) => {
+  console.log("Contenido de la sesión:", req.session);
+  next();
+});
+
 
 var sesionRouter = require('./routes/sesion');
 var usuariosRouter = require('./routes/usuarios');

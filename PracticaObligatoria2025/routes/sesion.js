@@ -69,6 +69,10 @@ router.post('/signin', function(request, response) {
         request.session.nombre = request.body.nombre;
         request.session.rol = request.body.rol;
         request.session.foto = null;
+        if (request.body.foto == null){
+          request.session.foto = "/images/Iconos/imagenSinRostro.png"; // Ruta a la foto por defecto
+        }
+        
 
         // Guardar la sesión
         request.session.save((err) => {
