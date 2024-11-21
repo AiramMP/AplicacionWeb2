@@ -14,7 +14,7 @@
     <%- include('header'); %>
     <%- include('navUser'); %>
 
-    <h1>Bienvenido, <%=usuario%></h1>
+    <h1>Bienvenid@, <%=nombre%></h1>
     <% eventos.forEach(function(datos){ %>
         <div class="row mt-4">
             <div class="col col-lg-10 col-md-10 col-sm-12 col-12 mx-auto">
@@ -28,6 +28,7 @@
                                 <h3 class="card-title mx-auto link" data-id="<%=datos.id_evento%>"> <%=datos.titulo%></h3>
                                 <p class="card-text mx"><%=datos.descripcion%> </p>
                                 <p class="card-text mx">El evento es el dia <%=datos.fecha%> a las <%=datos.hora%> con capacidad máxima de <%= datos.capacidad_maxima %></p>
+                                <p class="card-text mx">Quedan <%= datos.capacidad_restante %> plazas disponibles</p>
                                 <button type="button" class="link btn btn-primary w-50"  data-id="<%=datos.id_evento%>">Inscribirse</button>
                             </div>
                         </div>

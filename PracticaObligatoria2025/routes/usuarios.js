@@ -71,6 +71,31 @@ router.post('/cambiarFoto', multerFactory.single('foto'), function(request, resp
         response.redirect("/usuarios/miperfil");
       }
     });
-  });
+});
+
+router.get('/misInscripciones', function (request, response) {
+    const dao = request.daoUsuarios;
+    dao.misIncripciones(request.session.usuario, function (err, datos) {
+        if (err) {
+            response.status(500);
+            response.render('error', {
+                foto: request.session.foto,
+                nombre: request.session.nombre,
+                usuario: request.session.usuario,
+                rol: request.session.rol,
+                error: "No se pudo cargar las inscripciones del usuario"
+            });
+        } else {
+            response.render('misInscripciones', {
+                inscripciones: datos, // Cambiado para reflejar los datos correctos
+                foto: request.session.foto,
+                nombre: request.session.nombre,
+                usuario: request.session.usuario,
+                rol: request.session.rol,
+            });
+        }
+    });
+});
+
 
 module.exports = router;
