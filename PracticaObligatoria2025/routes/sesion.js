@@ -20,25 +20,29 @@ router.get('/existeUsuario',function(request,response){//Petición AJAX
   })
 });
 
-router.post('/comprobarpassword', function (request, response) {
-  const dao = request.daoSesiones;
-  dao.comprobarpassword(request.body.correos, request.body.passwords, function (err, data) {
+router.post('/comprobarpassword', function (req, res) {
+  const dao = req.daoSesiones;
+
+  dao.comprobarpassword(req.body.correos, req.body.passwords, function (err, data) {
       if (err) {
           console.error("Error en DAO:", err);
-          response.status(500).send("Error interno del servidor");
+          res.status(500).send("Error interno del servidor");
       } else if (!data) {
-          response.status(400).send("Contraseña equivocada o usuario no existente");
+          res.status(400).send("Credenciales inválidas");
       } else {
           const user = data[0];
-          request.session.usuario = user.correo;
-          request.session.foto = user.foto;
-          request.session.nombre = user.nombre;
-          request.session.rol = user.rol;
-          request.session.userId = user.id;
-          response.json(user);
+          req.session.userId = user.id; // Guardar el ID del usuario en la sesión
+          req.session.usuario = user.correo;
+          req.session.foto = user.foto;
+          req.session.nombre = user.nombre;
+          req.session.rol = user.rol;
+
+          console.log("Sesión iniciada:", req.session);
+          res.json(user); // Responder al cliente con los datos del usuario
       }
   });
 });
+
 
 
 

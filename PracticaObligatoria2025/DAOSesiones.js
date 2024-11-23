@@ -29,7 +29,7 @@ class DAOSesiones {
             if (err) {
                 callback(err, null);
             } else {
-                const sql = `SELECT correo, nombre, foto, rol FROM Usuarios WHERE correo=? AND password=?`;
+                const sql = `SELECT id, nombre, correo, foto, rol, password FROM usuarios WHERE correo = ?`;
                 connection.query(sql, [correo, password], function (err, datos) {
                     connection.release();
                     if (err) {
