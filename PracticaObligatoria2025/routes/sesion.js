@@ -34,6 +34,7 @@ router.post('/comprobarpassword', function (request, response) {
           request.session.foto = user.foto;
           request.session.nombre = user.nombre;
           request.session.rol = user.rol;
+          request.session.userId = user.id;
           response.json(user);
       }
   });
@@ -52,27 +53,23 @@ router.post('/signin', function(request, response) {
     request.body.facultad,
     request.body.rol,
     request.body.password,
-    function(err) {
+    function(err, userId) {
       if (err) {
         console.error("Error al añadir usuario:", err);
         response.status(500).render('error', {
-          foto: request.session.foto,
-          nombre: request.session.nombre,
-          usuario: request.session.usuario,
-          rol: request.session.rol,
           error: "No se pudo registrar el usuario",
           message: "Error al registrar usuario"
         });
       } else {
-        // Configurar la sesión
+        // Configurar la sesión con el ID del usuario
         request.session.usuario = request.body.correo;
         request.session.nombre = request.body.nombre;
         request.session.rol = request.body.rol;
+        request.session.userId = userId; // Guarda el ID del usuario en la sesión
         request.session.foto = null;
-        if (request.body.foto == null){
+        if (!request.body.foto) {
           request.session.foto = "/images/Iconos/imagenSinRostro.png"; // Ruta a la foto por defecto
         }
-        
 
         // Guardar la sesión
         request.session.save((err) => {

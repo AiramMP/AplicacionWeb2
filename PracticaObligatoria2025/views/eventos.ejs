@@ -25,11 +25,12 @@
                                 <img src="data:image/png; base64, <%= ((new Buffer(datos.foto)).toString('base64')) %>"alt="Foto Evento <%=datos.titulo%>"class="img-fluid h-100">
                             </div> 
                             <div class="col col-lg-8 col-md-8 col-sm-6 cols-12 text-center">
-                                <h3 class="card-title mx-auto link" data-id="<%=datos.id_evento%>"> <%=datos.titulo%></h3>
+                                <h3 class="card-title mx-auto link" data-id="<%=datos.id%>"> <%=datos.titulo%></h3>
                                 <p class="card-text mx"><%=datos.descripcion%> </p>
                                 <p class="card-text mx">El evento es el dia <%=datos.fecha%> a las <%=datos.hora%> con capacidad máxima de <%= datos.capacidad_maxima %></p>
-                                <p class="card-text mx">Quedan <%= datos.capacidad_restante %> plazas disponibles</p>
-                                <button type="button" class="link btn btn-primary w-50"  data-id="<%=datos.id_evento%>">Inscribirse</button>
+                                <p class="card-text mx">Quedan <%= datos.capacidad_restante %> plazas disponibles </p>
+                                <button type="button" class="link btn btn-primary w-50"  data-id="<%= datos.id %>">Inscribirse</button>
+                                <%= console.log(datos) %> <!-- Esto mostrará el ID en los logs del navegador -->
                             </div>
                         </div>
                     </div>

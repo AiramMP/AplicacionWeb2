@@ -46,25 +46,29 @@ class DAOSesiones {
     
 
 
-    anyadirUsuario(nombre, correo, telefono, facultad, rol, password, callback){
-        this.pool.getConnection(function(err, connection){
-            if(err){
+    anyadirUsuario(nombre, correo, tlf, facultad, rol, password, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
                 callback(err);
-            }
-            else{
-                const sql = `INSERT INTO Usuarios (nombre, correo, telefono, facultad, rol, configuraciones_accesibilidad, foto, password)
-                VALUES (?,?,?,?,?, NULL, NULL, ? )`;
-                connection.query(sql, [nombre, correo, telefono, facultad, rol, password], function(err){
-                    connection.release();
-                    if(err){
+            } else {
+                const sqlInsertar = `
+                    INSERT INTO usuarios (nombre, correo, telefono, facultad, rol, password)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `;
+                connection.query(sqlInsertar, [nombre, correo, tlf, facultad, rol, password], function (err, result) {
+                    if (err) {
+                        connection.release();
                         callback(err);
-                    }else{
-                        callback(null);
+                    } else {
+                        const userId = result.insertId; // Obtener el ID del nuevo usuario
+                        connection.release();
+                        callback(null, userId); // Retornar el ID
                     }
                 });
             }
         });
-    };
+    }
+    
 
 }
 

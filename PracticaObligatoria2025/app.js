@@ -51,13 +51,17 @@ app.use(session({
 
 const DAOUsuarios = require('./DAOUsuarios')
 const DAOSesiones = require('./DAOSesiones');
+const DAOEventos = require("./DAOEventos");
+
 const daoSesiones = new DAOSesiones(pools);
 const daoUsuarios = new DAOUsuarios(pools);
+const daoEventos = new DAOEventos(pools);
 
 
 app.use((request, response, next) =>{
   request.daoSesiones = daoSesiones;
   request.daoUsuarios = daoUsuarios;
+  request.daoEventos = daoEventos;
   next();
 });
 
@@ -69,8 +73,11 @@ app.use((req, res, next) => {
 
 var sesionRouter = require('./routes/sesion');
 var usuariosRouter = require('./routes/usuarios');
+var eventosRouter = require('./routes/eventos');
+
 app.use('/', sesionRouter);
 app.use('/usuarios', usuariosRouter);
+app.use('/eventos', eventosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
