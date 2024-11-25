@@ -1,5 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const multer = require('multer');
+const bodyParser = require('body-parser');
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 router.get("/", function (req, res) {
     const dao = req.daoEventos;
@@ -107,5 +112,48 @@ router.get("/misInscripciones", function (req, res) {
         }
     });
 });
+
+router.get('/crearEvento', function (req, res) {
+    res.render('crearEvento', {
+        nombre: req.session.nombre,
+        rol: req.session.rol,
+        usuario: req.session.usuario,
+        foto: req.session.foto,
+        usuarioId: req.session.userId
+    });
+});
+
+router.post('/guardarEvento', upload.single('foto'), function (req, res) {
+    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
+
+    if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima) {
+        return res.status(400).send('Todos los campos son obligatorios.');
+    }
+
+    const organizador_id = req.session.userId;
+    const foto = req.file ? req.file.buffer : null;
+
+    req.daoEventos.crearEvento(
+        titulo,
+        descripcion,
+        fecha,
+        hora,
+        ubicacion,
+        capacidad_maxima,
+        organizador_id,
+        foto,
+        function (err) {
+            if (err) {
+                console.error("Error al crear el evento:", err);
+                res.status(500).send('Error al crear el evento');
+            } else {
+                res.redirect('/usuarios/');
+            }
+        }
+    );
+});
+
+
+
 
 module.exports = router;

@@ -53,3 +53,22 @@ $(document).ready(function () {
         });
     });
 });
+
+$(document).ready(function () {
+    $('#btnCrearEvento').on('click', function () {
+        $.ajax({
+            url: '/eventos/crearEvento',
+            method: 'GET',
+            success: function (data) {
+                // Cargar el modal en el DOM
+                $('body').append(data);
+
+                // Mostrar el modal
+                $('#crearEventoModal').modal('show');
+            },
+            error: function (err) {
+                alert('Error al cargar el modal de creación de evento');
+            },
+        });
+    });
+});

@@ -29,6 +29,7 @@ router.post('/comprobarpassword', function (request, response) {
       } else if (!data) {
           response.status(400).send("Contraseña equivocada o usuario no existente");
       } else {
+        console.log(data[0]);
           const user = data[0];
           request.session.usuario = user.correo;
           request.session.foto = user.foto;

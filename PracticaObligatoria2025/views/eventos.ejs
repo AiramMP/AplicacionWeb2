@@ -14,7 +14,7 @@
     <%- include('header'); %>
     <%- include('navUser'); %>
 
-    <h1>Bienvenid@, <%=nombre%></h1>
+    <h1>Bienvenid@ <%=nombre%></h1>
     <% eventos.forEach(function(datos){ %>
         <div class="row mt-4">
             <div class="col col-lg-10 col-md-10 col-sm-12 col-12 mx-auto">
@@ -22,22 +22,26 @@
                     <div class="card-body">
                         <div class="row d-flex">
                             <div class="col col-lg-4 col-md-4 col-sm-6 col-10 text-center mx-auto">
-                                <img src="data:image/png; base64, <%= ((new Buffer(datos.foto)).toString('base64')) %>"alt="Foto Evento <%=datos.titulo%>"class="img-fluid h-100">
-                            </div> 
+                                <% if (datos.foto === null) { %>
+                                    <img src="/images/Iconos/imagenEventoGenerica.png" alt="Imagen del Evento Genérica" class="img-fluid h-100">
+                                <% } else { %>
+                                    <img src="data:image/png;base64, <%= ((new Buffer(datos.foto)).toString('base64')) %>" alt="Foto Evento <%=datos.titulo%>" class="img-fluid h-100">
+                                <% } %>
+                            </div>
                             <div class="col col-lg-8 col-md-8 col-sm-6 cols-12 text-center">
                                 <h3 class="card-title mx-auto link" data-id="<%=datos.id%>"> <%=datos.titulo%></h3>
                                 <p class="card-text mx"><%=datos.descripcion%> </p>
-                                <p class="card-text mx">El evento es el dia <%=datos.fecha%> a las <%=datos.hora%> con capacidad máxima de <%= datos.capacidad_maxima %></p>
-                                <p class="card-text mx">Quedan <%= datos.capacidad_restante %> plazas disponibles </p>
-                                <button type="button" class="link btn btn-primary w-50"  data-id="<%= datos.id %>">Inscribirse</button>
-                                <%= console.log(datos) %> <!-- Esto mostrará el ID en los logs del navegador -->
+                                <p class="card-text mx">El evento es el día <%=datos.fecha%> a las <%=datos.hora%> con capacidad máxima de <%= datos.capacidad_maxima %></p>
+                                <p class="card-text mx">Quedan <%= datos.capacidad_restante %> plazas disponibles</p>
+                                <button type="button" class="link btn btn-primary w-50" data-id="<%= datos.id %>">Inscribirse</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <%});%>
+    <% }); %>
+    
     
     <%- include('footer'); %>
 

@@ -178,6 +178,35 @@ class DAOEventos {
             }
         });
     }
+
+    crearEvento(titulo, descripcion, fecha, hora, ubicacion, capacidadMaxima, organizadorId, foto, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                console.error("Error al obtener conexión a la base de datos:", err);
+                callback(err);
+            } else {
+                const sql = `
+                    INSERT INTO eventos (titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, capacidad_restante, organizador_id, foto)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `;
+                connection.query(
+                    sql,
+                    [titulo, descripcion, fecha, hora, ubicacion, capacidadMaxima, capacidadMaxima, organizadorId, foto],
+                    function (err, resultado) {
+                        connection.release();
+                        if (err) {
+                            console.error("Error al crear el evento:", err);
+                            callback(err);
+                        } else {
+                            console.log("Evento creado exitosamente con ID:", resultado.insertId);
+                            callback(null, resultado.insertId); // Devuelve el ID del evento creado
+                        }
+                    }
+                );
+            }
+        });
+    }
+    
 }
 
 module.exports = DAOEventos;

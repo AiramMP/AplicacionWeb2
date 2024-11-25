@@ -14,6 +14,7 @@ router.get('/', function(request, response){
                 foto:request.session.foto,
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
+                idUsuario: request.session.userId,
                 rol: request.session.rol,
                 error:"No se pudo cargar los eventos de la universidad"
             })
@@ -24,6 +25,7 @@ router.get('/', function(request, response){
                 foto:request.session.foto,
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
+                idUsuario: request.session.userId,
                 rol: request.session.rol,
             });
         }

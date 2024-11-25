@@ -1,0 +1,47 @@
+<div class="modal fade" id="crearEventoModal" tabindex="-1" aria-labelledby="crearEventoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="crearEventoLabel">Crear Nuevo Evento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="formCrearEvento" enctype="multipart/form-data" action="/eventos/guardarEvento" method="POST">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título del Evento</label>
+              <input type="text" class="form-control" id="titulo" name="titulo" required>
+            </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="fecha" class="form-label">Fecha</label>
+              <input type="date" class="form-control" id="fecha" name="fecha" required>
+            </div>
+            <div class="mb-3">
+              <label for="hora" class="form-label">Hora</label>
+              <input type="time" class="form-control" id="hora" name="hora" required>
+            </div>
+            <div class="mb-3">
+              <label for="ubicacion" class="form-label">Ubicación</label>
+              <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+            </div>
+            <div class="mb-3">
+              <label for="capacidad_maxima" class="form-label">Capacidad Máxima</label>
+              <input type="number" class="form-control" id="capacidad_maxima" name="capacidad_maxima" min="1" required>
+            </div>
+            <div class="mb-3">
+              <label for="foto" class="form-label">Subir Foto del Evento</label>
+              <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar Evento</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
