@@ -153,6 +153,102 @@ router.post('/guardarEvento', upload.single('foto'), function (req, res) {
     );
 });
 
+router.get('/misEventos', function (req, res) {
+    const dao = req.daoEventos;
+    const organizadorId = req.session.userId;
+
+    dao.listarEventosPorOrganizador(organizadorId, function (err, eventos) {
+        if (err) {
+            res.status(500);
+            res.render('error', {
+                foto: req.session.foto,
+                nombre: req.session.nombre,
+                usuario: req.session.usuario,
+                rol: req.session.rol,
+                error: 'No se pudieron cargar tus eventos',
+            });
+        } else {
+            res.render('misEventos', {
+                eventos: eventos,
+                foto: req.session.foto,
+                nombre: req.session.nombre,
+                usuario: req.session.usuario,
+                rol: req.session.rol,
+            });
+        }
+    });
+});
+
+router.get('/editar/:id', (req, res) => {
+    const eventoId = req.params.id;
+    req.daoEventos.obtenerEvento(eventoId, (err, evento) => {
+        if (err) {
+            console.error("Error al obtener el evento:", err);
+            res.status(500).send("Error interno del servidor.");
+        } else {
+            // Formatear la hora para eliminar los segundos
+            const horaFormateada = evento.hora.slice(0, 5); // 'HH:MM:SS' -> 'HH:MM'
+            
+            res.render('editarEvento', {
+                evento: {
+                    ...evento,
+                    hora: horaFormateada
+                },
+                error: null,
+                rol: req.session.rol,
+                nombre: req.session.nombre,
+                usuario: req.session.usuario,
+                foto: req.session.foto
+            });
+        }
+    });
+});
+
+
+
+router.post('/editar/:id', upload.single('foto'), (req, res) => {
+    const eventoId = req.params.id;
+    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
+    const nuevaFoto = req.file ? req.file.buffer : null;
+
+    // Llamamos a la función para editar el evento
+    req.daoEventos.editarEvento(eventoId, {
+        titulo,
+        descripcion,
+        fecha,
+        hora,
+        ubicacion,
+        capacidad_maxima: parseInt(capacidad_maxima, 10), // Convertir a número
+        foto: nuevaFoto
+    }, (err, mensaje) => {
+        if (err) {
+            console.error("Error al editar el evento:", err.message);
+
+            // Si ocurre un error, obtenemos los datos del evento para rellenar el formulario nuevamente
+            req.daoEventos.obtenerEvento(eventoId, (errEvento, evento) => {
+                if (errEvento) {
+                    res.status(500).send("Error interno del servidor.");
+                } else {
+                    res.render('editarEvento', {
+                        evento: {
+                            ...evento,
+                            fecha: evento.fecha.toISOString().split('T')[0], // Formato para input date
+                            hora: evento.hora.slice(0, 5) // Formato para input time
+                        },
+                        error: err.message, // Pasamos el mensaje de error
+                        foto: req.session.foto,
+                        nombre: req.session.nombre,
+                        usuario: req.session.usuario,
+                        rol: req.session.rol
+                    });
+                }
+            });
+        } else {
+            console.log(mensaje); // Mensaje de éxito
+            res.redirect('/eventos/misEventos');
+        }
+    });
+});
 
 
 

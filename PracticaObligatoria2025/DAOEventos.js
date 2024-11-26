@@ -206,6 +206,99 @@ class DAOEventos {
             }
         });
     }
+
+    listarEventosPorOrganizador(organizadorId, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                console.error('Error al obtener conexión a la base de datos:', err);
+                callback(err, null);
+            } else {
+                const sql = `
+                    SELECT * FROM eventos
+                    WHERE organizador_id = ?
+                `;
+                connection.query(sql, [organizadorId], function (err, resultados) {
+                    connection.release();
+                    if (err) {
+                        console.error('Error al obtener los eventos del organizador:', err);
+                        callback(err, null);
+                    } else {
+                        callback(null, resultados);
+                    }
+                });
+            }
+        });
+    }
+    
+    editarEvento(eventoId, datos, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, foto } = datos;
+    
+                // Obtenemos el número de inscritos y la capacidad restante
+                const sqlValidar = `
+                    SELECT capacidad_restante, capacidad_maxima - capacidad_restante AS inscritos 
+                    FROM eventos 
+                    WHERE id = ?
+                `;
+                connection.query(sqlValidar, [eventoId], (err, resultado) => {
+                    if (err) {
+                        connection.release();
+                        callback(err);
+                    } else if (resultado.length === 0) {
+                        connection.release();
+                        callback(new Error("Evento no encontrado."));
+                    } else {
+                        const { capacidad_restante, inscritos } = resultado[0];
+    
+                        if (capacidad_maxima < inscritos) {
+                            connection.release();
+                            callback(new Error(`La capacidad máxima no puede ser menor que el número de inscritos (${inscritos}).`));
+                        } else {
+                            // Calculamos la nueva capacidad restante
+                            const nuevaCapacidadRestante = capacidad_maxima - inscritos;
+    
+                            // Actualizamos el evento
+                            const sqlActualizar = `
+                                UPDATE eventos
+                                SET titulo = ?, descripcion = ?, fecha = ?, hora = ?, ubicacion = ?, capacidad_maxima = ?, capacidad_restante = ?, foto = ?
+                                WHERE id = ?
+                            `;
+                            connection.query(sqlActualizar, [titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, nuevaCapacidadRestante, foto, eventoId], (err) => {
+                                connection.release();
+                                if (err) {
+                                    callback(err);
+                                } else {
+                                    callback(null, "Evento actualizado correctamente.");
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
+    
+    obtenerEvento(id, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                const sql = `SELECT * FROM eventos WHERE id = ?`;
+                connection.query(sql, [id], (err, results) => {
+                    connection.release();
+                    if (err) {
+                        callback(err);
+                    } else {
+                        callback(null, results[0]);
+                    }
+                });
+            }
+        });
+    }
     
 }
 
