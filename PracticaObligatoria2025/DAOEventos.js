@@ -117,34 +117,60 @@ class DAOEventos {
                 console.error("Error al obtener conexión a la base de datos:", err);
                 callback(err);
             } else {
-                // Eliminar la inscripción del usuario
-                const sqlEliminar = `
-                    DELETE FROM inscripciones 
+                // Comprobar el estado de inscripción antes de eliminar
+                const sqlComprobarEstado = `
+                    SELECT estado_inscripcion 
+                    FROM inscripciones 
                     WHERE usuario_id = ? AND evento_id = ?
                 `;
-                connection.query(sqlEliminar, [usuarioId, id_evento], function (err, resultado) {
+                connection.query(sqlComprobarEstado, [usuarioId, id_evento], function (err, resultados) {
                     if (err) {
-                        console.error("Error al eliminar inscripción:", err);
+                        console.error("Error al comprobar estado de inscripción:", err);
                         connection.release();
                         callback(err);
-                    } else if (resultado.affectedRows === 0) {
+                    } else if (resultados.length === 0) {
                         console.error("No se encontró inscripción para eliminar.");
                         connection.release();
                         callback(new Error("No estás inscrito en este evento."));
                     } else {
-                        // Incrementar la capacidad restante del evento
-                        const sqlActualizarCapacidad = `
-                            UPDATE eventos 
-                            SET capacidad_restante = capacidad_restante + 1
-                            WHERE id = ?
+                        const estadoInscripcion = resultados[0].estado_inscripcion;
+                        console.log("Estado de inscripción:", estadoInscripcion);
+    
+                        // Eliminar la inscripción del usuario
+                        const sqlEliminar = `
+                            DELETE FROM inscripciones 
+                            WHERE usuario_id = ? AND evento_id = ?
                         `;
-                        connection.query(sqlActualizarCapacidad, [id_evento], function (err) {
-                            connection.release();
+                        connection.query(sqlEliminar, [usuarioId, id_evento], function (err, resultado) {
                             if (err) {
-                                console.error("Error al actualizar capacidad restante:", err);
+                                console.error("Error al eliminar inscripción:", err);
+                                connection.release();
                                 callback(err);
+                            } else if (resultado.affectedRows === 0) {
+                                console.error("No se encontró inscripción para eliminar.");
+                                connection.release();
+                                callback(new Error("No estás inscrito en este evento."));
+                            } else if (estadoInscripcion === 'inscrito') {
+                                // Incrementar la capacidad restante del evento solo si estaba inscrito
+                                const sqlActualizarCapacidad = `
+                                    UPDATE eventos 
+                                    SET capacidad_restante = capacidad_restante + 1
+                                    WHERE id = ?
+                                `;
+                                connection.query(sqlActualizarCapacidad, [id_evento], function (err) {
+                                    connection.release();
+                                    if (err) {
+                                        console.error("Error al actualizar capacidad restante:", err);
+                                        callback(err);
+                                    } else {
+                                        console.log("Capacidad restante actualizada y usuario desapuntado.");
+                                        callback(null);
+                                    }
+                                });
                             } else {
-                                console.log("Capacidad restante actualizada y usuario desapuntado.");
+                                // Liberar conexión si estaba en la lista de espera (no se actualiza capacidad)
+                                connection.release();
+                                console.log("Usuario desapuntado. No se actualizó capacidad porque estaba en lista de espera.");
                                 callback(null);
                             }
                         });
@@ -152,7 +178,8 @@ class DAOEventos {
                 });
             }
         });
-    }    
+    }
+        
     
 
     // Obtener inscripciones de un usuario
