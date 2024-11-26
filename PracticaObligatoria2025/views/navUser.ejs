@@ -32,6 +32,11 @@
                             <button type="button" class="btn" id="btnCrearEvento">Crear Evento</button>
                         </li>
                     <% } %>
+                    <% if (rol === 'organizador') { %>
+                        <li class="nav-item mb-1 mx-3">
+                            <button type="button" class="btn" id="btnMisEventos">Mis Eventos</button>
+                        </li>
+                    <% } %>
                     <li class="nav-item mb-1 ms-auto mx-5">
                         <form action="/logout" method="GET" class="d-flex" role="search"> 
                             <button type="submit" class="btn" id="btnClose">Cerrar Sesión</button>
@@ -64,6 +69,11 @@
                     <% if (rol === 'organizador') { %>
                         <li class="nav-item mb-2">
                             <button type="button" class="btn w-100" id="btnCrearEvento">Crear Evento</button>
+                        </li>
+                    <% } %>
+                    <% if (rol === 'organizador') { %>
+                        <li class="nav-item mb-2">
+                            <button type="button" class="btn w-100" id="btnMisEventos">Mis Eventos</button>
                         </li>
                     <% } %>
                     <li class="nav-item mt-4">
