@@ -141,3 +141,7 @@ h1 {
   padding: 10px 15px;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
+.extra-margin-bottom {
+  margin-bottom: 200px; /* Ajusta el valor según tus necesidades */
+}

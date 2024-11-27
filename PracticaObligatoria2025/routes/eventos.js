@@ -250,6 +250,59 @@ router.post('/editar/:id', upload.single('foto'), (req, res) => {
     });
 });
 
+router.get('/listaEspera/:id', (req, res) => {
+    const eventoId = req.params.id;
+
+    req.daoEventos.obtenerListaEspera(eventoId, (err, listaEspera) => {
+        if (err) {
+            console.error("Error al obtener la lista de espera:", err.message);
+            res.status(500).render('error', {
+                error: "No se pudo cargar la lista de espera.",
+                foto: req.session.foto,
+                nombre: req.session.nombre,
+                usuario: req.session.usuario,
+                rol: req.session.rol
+            });
+        } else {
+            res.render('listaEspera', {
+                listaEspera,
+                eventoId,
+                foto: req.session.foto,
+                nombre: req.session.nombre,
+                usuario: req.session.usuario,
+                rol: req.session.rol
+            });
+        }
+    });
+});
+
+
+router.post('/aceptarListaEspera/:id', (req, res) => {
+    const inscripcionId = req.params.id;
+
+    req.daoEventos.aceptarListaEspera(inscripcionId, (err) => {
+        if (err) {
+            console.error("Error al aceptar inscripción:", err.message);
+            res.status(500).send("Error al aceptar inscripción.");
+        } else {
+            res.redirect('back'); // Volver a la lista de espera
+        }
+    });
+});
+
+
+router.post('/rechazarListaEspera/:id', (req, res) => {
+    const inscripcionId = req.params.id;
+
+    req.daoEventos.rechazarListaEspera(inscripcionId, (err) => {
+        if (err) {
+            console.error("Error al rechazar inscripción:", err.message);
+            res.status(500).send("Error al rechazar inscripción.");
+        } else {
+            res.redirect('back'); // Volver a la lista de espera
+        }
+    });
+});
 
 
 module.exports = router;

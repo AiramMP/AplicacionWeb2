@@ -326,6 +326,74 @@ class DAOEventos {
             }
         });
     }
+
+    obtenerListaEspera(eventoId, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err, null);
+            } else {
+                const sql = `
+                    SELECT i.id, i.usuario_id, u.nombre, u.correo, i.fecha_inscripcion
+                    FROM inscripciones i
+                    JOIN usuarios u ON i.usuario_id = u.id
+                    WHERE i.evento_id = ? AND i.estado_inscripcion = 'lista de espera'
+                    ORDER BY i.fecha_inscripcion ASC
+                `;
+                connection.query(sql, [eventoId], (err, results) => {
+                    connection.release();
+                    if (err) {
+                        callback(err, null);
+                    } else {
+                        callback(null, results);
+                    }
+                });
+            }
+        });
+    }
+    
+    aceptarListaEspera(inscripcionId, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                const sql = `
+                    UPDATE inscripciones
+                    SET estado_inscripcion = 'inscrito'
+                    WHERE id = ?
+                `;
+                connection.query(sql, [inscripcionId], (err) => {
+                    if (err) {
+                        connection.release();
+                        callback(err);
+                    } else {
+                        const sqlIncrementarCapacidad = `
+                            UPDATE eventos
+                            SET capacidad_maxima = capacidad_maxima + 1
+                            WHERE id = (SELECT evento_id FROM inscripciones WHERE id = ?)
+                        `;
+                        connection.query(sqlIncrementarCapacidad, [inscripcionId], (err) => {
+                            connection.release();
+                            callback(err);
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    rechazarListaEspera(inscripcionId, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                const sql = 'DELETE FROM inscripciones WHERE id = ?';
+                connection.query(sql, [inscripcionId], (err) => {
+                    connection.release();
+                    callback(err);
+                });
+            }
+        });
+    }
     
 }
 
