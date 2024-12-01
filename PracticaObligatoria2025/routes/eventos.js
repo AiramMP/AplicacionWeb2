@@ -174,8 +174,8 @@ router.get('/crearEvento', function (req, res) {
         usuarioId: req.session.userId
     });
 });
-/*
-router.post('/guardarEvento', upload.single('foto'), function (req, res) {
+
+/*router.post('/guardarEvento', upload.single('foto'), function (req, res) {
     const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
 
     if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima) {
@@ -205,10 +205,12 @@ router.post('/guardarEvento', upload.single('foto'), function (req, res) {
     );
 });*/
 
-router.post('/guardarEvento', (req, res) => {
+router.post('/guardarEvento', upload.single('foto'), (req, res) => {
     const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
     const organizadorId = req.session.userId;
     const foto = req.file ? req.file.buffer : null;
+    console.log("--------------------------------------------------------");
+    console.log(req.body);
 
     if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima) {
         res.status(400).send('Todos los campos son obligatorios.');

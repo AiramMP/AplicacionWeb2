@@ -39,6 +39,9 @@
                             </form>
                         </li>
                     <% } %>
+                    <li class="nav-item mb-1 mx-3">
+                        <button type="button" class="btn" id="btnAccesibilidad" data-bs-toggle="modal" data-bs-target="#configModal">Configuración de Accesibilidad</button>
+                    </li>                    
                     <li class="nav-item mb-1 ms-auto mx-5">
                         <form action="/logout" method="GET" class="d-flex" role="search"> 
                             <button type="submit" class="btn" id="btnClose">Cerrar Sesión</button>
@@ -79,7 +82,10 @@
                                 <button type="submit" class="btn w-100">Mis Eventos</button>
                             </form>
                         </li>
-                    <% } %>                    
+                    <% } %>
+                    <li class="nav-item mb-2">
+                        <button type="button" class="btn w-100" id="btnAccesibilidad" data-bs-toggle="modal" data-bs-target="#configModal">Configuración de Accesibilidad</button>
+                    </li>                     
                     <li class="nav-item mt-4">
                         <form action="/logout" method="GET" class="d-flex w-100" role="search">
                             <button type="submit" class="btn w-100" id="btnClose">Cerrar Sesión</button>

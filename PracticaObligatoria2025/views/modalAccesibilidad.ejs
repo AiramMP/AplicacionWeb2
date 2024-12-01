@@ -1,0 +1,39 @@
+<div class="modal fade" id="configModal" tabindex="-1" aria-labelledby="configModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="configModalLabel">Configuración de Accesibilidad</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formAccesibilidad">
+                    <div class="mb-3">
+                        <label for="sectionColor" class="form-label">Paleta de Colores</label>
+                        <select class="form-select" id="sectionColor" name="paleta_colores">
+                            <option value="default">Predeterminado</option>
+                            <option value="alto-contraste">Alto Contraste</option>
+                            <option value="daltonismo">Daltonismo</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fontSize" class="form-label">Tamaño del Texto</label>
+                        <select class="form-select" id="fontSize" name="tamano_texto">
+                            <option value="default">Predeterminado</option>
+                            <option value="pequeno">Pequeño</option>
+                            <option value="mediano">Mediano</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="underlineLinks" name="configuracion_navegacion">
+                        <label class="form-check-label" for="underlineLinks">Subrayar Enlaces</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardarConfiguracion">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>

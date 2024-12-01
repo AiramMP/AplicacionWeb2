@@ -52,19 +52,21 @@ const DAOUsuarios = require('./DAOUsuarios')
 const DAOSesiones = require('./DAOSesiones');
 const DAOEventos = require("./DAOEventos");
 const DAOCorreos = require('./DAOCorreos');
+const DAOAccesibilidad = require('./DAOAccesibilidad')
 
 
 const daoSesiones = new DAOSesiones(pools);
 const daoUsuarios = new DAOUsuarios(pools);
 const daoEventos = new DAOEventos(pools);
 const daoCorreos = new DAOCorreos(pools);
-
+const daoAccesibilidad = new DAOAccesibilidad(pools);
 
 app.use((request, response, next) =>{
   request.daoSesiones = daoSesiones;
   request.daoUsuarios = daoUsuarios;
   request.daoEventos = daoEventos;
   request.daoCorreos = daoCorreos;
+  request.daoAccesibilidad = daoAccesibilidad;
   next();
 });
 
@@ -78,11 +80,13 @@ var sesionRouter = require('./routes/sesion');
 var usuariosRouter = require('./routes/usuarios');
 var eventosRouter = require('./routes/eventos');
 var correosRouter = require('./routes/correos');
+var accesibilidadRouter = require('./routes/accesibilidad');
 
 app.use('/', sesionRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/eventos', eventosRouter);
 app.use('/correos', correosRouter);
+app.use('/accesibilidad', accesibilidadRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
