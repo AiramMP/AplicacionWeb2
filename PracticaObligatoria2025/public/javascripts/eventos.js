@@ -72,3 +72,24 @@ $(document).ready(function () {
         });
     });
 });
+
+$(document).on('click', '.aceptar-lista-espera', function () {
+    const inscripcionId = $(this).data('id'); // Obtener el ID de la inscripción
+
+    $.ajax({
+        url: `/eventos/aceptarListaEspera/${inscripcionId}`,
+        method: 'POST',
+        success: function (response) {
+            alert(response.message); // Mostrar mensaje de éxito
+            location.reload(); // Recargar la página para actualizar la lista
+        },
+        error: function (xhr) {
+            if (xhr.status === 400) {
+                const response = JSON.parse(xhr.responseText);
+                alert(response.message); // Mostrar mensaje específico para capacidad llena
+            } else {
+                alert('Ocurrió un error al aceptar la inscripción.');
+            }
+        }
+    });
+});

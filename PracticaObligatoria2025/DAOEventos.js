@@ -327,6 +327,30 @@ class DAOEventos {
         });
     }
 
+    obtenerDatosOrganizador(eventoId, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err, null);
+            } else {
+                const sql = `
+                    SELECT u.id AS organizador_id, u.nombre AS organizador_nombre, u.correo AS organizador_correo
+                    FROM eventos e
+                    JOIN usuarios u ON e.organizador_id = u.id
+                    WHERE e.id = ?;
+                `;
+                connection.query(sql, [eventoId], (err, results) => {
+                    connection.release();
+                    if (err) {
+                        callback(err, null);
+                    } else {
+                        callback(null, results[0]); // Devuelve los datos del organizador
+                    }
+                });
+            }
+        });
+    }
+    
+
     obtenerListaEspera(eventoId, callback) {
         this.pool.getConnection((err, connection) => {
             if (err) {
@@ -356,24 +380,98 @@ class DAOEventos {
             if (err) {
                 callback(err);
             } else {
-                const sql = `
-                    UPDATE inscripciones
-                    SET estado_inscripcion = 'inscrito'
-                    WHERE id = ?
+                const sqlValidarCapacidad = `
+                    SELECT e.id AS eventoId, e.capacidad_restante, i.usuario_id
+                    FROM eventos e
+                    JOIN inscripciones i ON e.id = i.evento_id
+                    WHERE i.id = ?
                 `;
-                connection.query(sql, [inscripcionId], (err) => {
+    
+                connection.query(sqlValidarCapacidad, [inscripcionId], (err, resultados) => {
                     if (err) {
                         connection.release();
                         callback(err);
+                    } else if (resultados.length === 0) {
+                        connection.release();
+                        callback(new Error("Inscripción o evento no encontrado."));
                     } else {
-                        const sqlIncrementarCapacidad = `
-                            UPDATE eventos
-                            SET capacidad_maxima = capacidad_maxima + 1
-                            WHERE id = (SELECT evento_id FROM inscripciones WHERE id = ?)
-                        `;
-                        connection.query(sqlIncrementarCapacidad, [inscripcionId], (err) => {
+                        const { eventoId, capacidad_restante, usuario_id: usuarioId } = resultados[0];
+    
+                        if (capacidad_restante <= 0) {
                             connection.release();
-                            callback(err);
+                            // Aquí devolvemos un error con un código personalizado
+                            const error = new Error("El evento está lleno. No se puede aceptar más inscripciones.");
+                            error.code = "00"; // Código personalizado
+                            callback(error);
+                        } else {
+                            const sqlAceptar = `
+                                UPDATE inscripciones
+                                SET estado_inscripcion = 'inscrito'
+                                WHERE id = ?
+                            `;
+    
+                            connection.query(sqlAceptar, [inscripcionId], (err) => {
+                                if (err) {
+                                    connection.release();
+                                    callback(err);
+                                } else {
+                                    const sqlActualizarCapacidad = `
+                                        UPDATE eventos
+                                        SET capacidad_restante = capacidad_restante - 1
+                                        WHERE id = ?
+                                    `;
+    
+                                    connection.query(sqlActualizarCapacidad, [eventoId], (err) => {
+                                        connection.release();
+                                        if (err) {
+                                            callback(err);
+                                        } else {
+                                            callback(null, usuarioId, eventoId);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
+    
+    
+    
+    
+    rechazarListaEspera(inscripcionId, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err);
+            } else {
+                // Obtener el ID del usuario y del evento antes de eliminar
+                const sqlObtenerDatos = `
+                    SELECT usuario_id, evento_id
+                    FROM inscripciones
+                    WHERE id = ?
+                `;
+                connection.query(sqlObtenerDatos, [inscripcionId], (err, rows) => {
+                    if (err || rows.length === 0) {
+                        connection.release();
+                        callback(err || new Error("No se encontró inscripción en lista de espera para rechazar."));
+                    } else {
+                        const { usuario_id, evento_id } = rows[0];
+    
+                        // Eliminar inscripción
+                        const sqlEliminar = `
+                            DELETE FROM inscripciones
+                            WHERE id = ?
+                        `;
+                        connection.query(sqlEliminar, [inscripcionId], (err) => {
+                            connection.release();
+                            if (err) {
+                                callback(err);
+                            } else {
+                                callback(null, usuario_id, evento_id); // Devolver IDs para la notificación
+                            }
                         });
                     }
                 });
@@ -381,19 +479,6 @@ class DAOEventos {
         });
     }
     
-    rechazarListaEspera(inscripcionId, callback) {
-        this.pool.getConnection((err, connection) => {
-            if (err) {
-                callback(err);
-            } else {
-                const sql = 'DELETE FROM inscripciones WHERE id = ?';
-                connection.query(sql, [inscripcionId], (err) => {
-                    connection.release();
-                    callback(err);
-                });
-            }
-        });
-    }
     
 }
 

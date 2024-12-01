@@ -35,13 +35,17 @@
                             <td><%= inscripcion.correo %></td>
                             <td><%= inscripcion.fecha_inscripcion.toLocaleDateString() %></td>
                             <td>
-                                <form action="/eventos/aceptarListaEspera/<%= inscripcion.id %>" method="POST" class="d-inline">
-                                    <button type="submit" class="btn btn-success">Aceptar</button>
-                                </form>
+                                <button 
+                                    type="button" 
+                                    class="btn btn-success aceptar-lista-espera" 
+                                    data-id="<%= inscripcion.id %>">
+                                    Aceptar
+                                </button>
                                 <form action="/eventos/rechazarListaEspera/<%= inscripcion.id %>" method="POST" class="d-inline">
                                     <button type="submit" class="btn btn-danger">Rechazar</button>
                                 </form>
                             </td>
+                            
                         </tr>
                     <% }); %>
                 </tbody>

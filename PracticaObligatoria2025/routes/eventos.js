@@ -30,58 +30,110 @@ router.get("/", function (req, res) {
     });
 });
 
-router.post("/inscribirse", function (req, res) {
-    const dao = req.daoEventos;
-    const usuarioId = req.session.userId; // ID del usuario desde la sesión
-    const idEvento = req.body.id; // ID del evento enviado desde el cliente
+router.post('/inscribirse', (req, res) => {
+    const daoEventos = req.daoEventos;
+    const daoCorreos = req.daoCorreos;
+    const usuarioId = req.session.userId; // Usuario actual
+    const usuarioCorreo = req.session.usuario; // Correo del usuario actual
+    const idEvento = req.body.id;
 
     if (!usuarioId || !idEvento) {
         res.status(400).json({ success: false, message: "Faltan datos necesarios para inscribirse." });
         return;
     }
 
-    dao.inscribirseEvento(usuarioId, idEvento, function (err, estado) {
+    daoEventos.inscribirseEvento(usuarioId, idEvento, (err, estado) => {
         if (err) {
-            console.error("Error al intentar inscribirse:", err);
-            res.status(500).json({
-                success: false,
-                message: "Error interno del servidor. No se pudo completar la inscripción.",
+            res.status(500).json({ success: false, message: "Error interno del servidor." });
+        } else {
+            // Obtener datos del organizador para notificarle
+            daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
+                if (err) {
+                    console.error("Error al obtener datos del organizador:", err);
+                } else {
+                    const asunto = "Nueva inscripción a tu evento";
+                    const mensaje = `El usuario ${usuarioCorreo} se ha inscrito en tu evento con ID ${idEvento}.`;
+                    daoCorreos.enviarNotificacion(usuarioId, organizador.organizador_id, asunto, mensaje, (err) => {
+                        if (err) {
+                            console.error("Error al enviar notificación al organizador:", err);
+                        }
+                    });
+                }
             });
-        } else if (estado === "ya_inscrito") {
-            res.json({ success: false, message: "Ya estás inscrito o en lista de espera para este evento." });
-        } else if (estado === "inscrito") {
-            res.json({ success: true, message: "Inscripción exitosa." });
-        } else if (estado === "lista_de_espera") {
-            // Responder con éxito pero indicando que fue a lista de espera
-            res.json({ success: true, message: "Añadido a la lista de espera." });
+
+            res.json({ success: true, message: estado === "inscrito" ? "Inscripción exitosa." : "Añadido a la lista de espera." });
         }
     });
 });
 
-router.post("/desapuntarse", function (req, res) {
-    const dao = req.daoEventos;
-    const usuarioId = req.session.userId; // ID del usuario desde la sesión
-    const idEvento = req.body.id; // ID del evento enviado desde el cliente
 
+
+
+router.post("/cancelarEvento", function (req, res) {
+    const daoEventos = req.daoEventos;
+    const daoCorreos = req.daoCorreos;
+    const eventoId = req.body.id;
+
+    daoEventos.cancelarEvento(eventoId, function (err) {
+        if (err) {
+            console.error("Error al cancelar evento:", err);
+            res.status(500).send("No se pudo cancelar el evento.");
+        } else {
+            // Obtener usuarios inscritos y notificarles
+            daoEventos.obtenerUsuariosInscritos(eventoId, function (err, usuarios) {
+                if (!err && usuarios.length > 0) {
+                    usuarios.forEach((usuario) => {
+                        const asunto = "Evento cancelado";
+                        const mensaje = `El evento al que estabas inscrito ha sido cancelado.`;
+                        daoCorreos.enviarNotificacion("Sistema", usuario.id, asunto, mensaje, function (err) {
+                            if (err) console.error("Error al notificar a usuario:", err);
+                        });
+                    });
+                }
+            });
+
+            res.json({ success: true, message: "Evento cancelado y usuarios notificados." });
+        }
+    });
+});
+
+
+
+router.post('/desapuntarse', (req, res) => {
+    const daoEventos = req.daoEventos;
+    const daoCorreos = req.daoCorreos;
+    const usuarioId = req.session.userId; // Usuario actual
+    const usuarioCorreo = req.session.usuario; // Correo del usuario actual
+    const idEvento = req.body.id;
 
     if (!usuarioId || !idEvento) {
-        console.error("Faltan datos necesarios: usuarioId o idEvento.");
         res.status(400).json({ success: false, message: "Faltan datos necesarios para desapuntarse." });
         return;
     }
 
-    dao.desapuntarseEvento(usuarioId, idEvento, function (err) {
+    daoEventos.desapuntarseEvento(usuarioId, idEvento, (err) => {
         if (err) {
-            console.error("Error al intentar desapuntarse:", err);
-            res.status(500).json({
-                success: false,
-                message: err.message || "No se pudo completar la acción de desapuntarse.",
-            });
+            res.status(500).json({ success: false, message: "Error al desapuntarse del evento." });
         } else {
+            daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
+                if (!err && organizador) {
+                    const asunto = "Un usuario se ha desapuntado";
+                    const mensaje = `El usuario ${usuarioCorreo} se ha desapuntado de tu evento con ID ${idEvento}.`;
+                    daoCorreos.enviarNotificacion(usuarioId, organizador.organizador_id, asunto, mensaje, (err) => {
+                        if (err) {
+                            console.error("Error al enviar notificación al organizador:", err);
+                        }
+                    });
+                }
+            });
+
             res.json({ success: true, message: "Te has desapuntado del evento exitosamente." });
         }
     });
 });
+
+
+
 
 
 
@@ -122,7 +174,7 @@ router.get('/crearEvento', function (req, res) {
         usuarioId: req.session.userId
     });
 });
-
+/*
 router.post('/guardarEvento', upload.single('foto'), function (req, res) {
     const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
 
@@ -151,7 +203,36 @@ router.post('/guardarEvento', upload.single('foto'), function (req, res) {
             }
         }
     );
+});*/
+
+router.post('/guardarEvento', (req, res) => {
+    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
+    const organizadorId = req.session.userId;
+    const foto = req.file ? req.file.buffer : null;
+
+    if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima) {
+        res.status(400).send('Todos los campos son obligatorios.');
+        return;
+    }
+
+    req.daoEventos.crearEvento(titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, organizadorId, foto, (err, eventoId) => {
+        if (err) {
+            res.status(500).send('Error al crear el evento.');
+        } else {
+            // Confirmación al organizador
+            const asunto = "Evento creado exitosamente";
+            const mensaje = `Tu evento "${titulo}" ha sido creado con éxito.`;
+            req.daoCorreos.enviarNotificacion("Sistema", organizadorId, asunto, mensaje, (err) => {
+                if (err) {
+                    console.error("Error al enviar confirmación al organizador:", err);
+                }
+            });
+
+            res.redirect('/usuarios/');
+        }
+    });
 });
+
 
 router.get('/misEventos', function (req, res) {
     const dao = req.daoEventos;
@@ -279,30 +360,84 @@ router.get('/listaEspera/:id', (req, res) => {
 
 router.post('/aceptarListaEspera/:id', (req, res) => {
     const inscripcionId = req.params.id;
+    const daoEventos = req.daoEventos;
+    const daoCorreos = req.daoCorreos;
 
-    req.daoEventos.aceptarListaEspera(inscripcionId, (err) => {
+    daoEventos.aceptarListaEspera(inscripcionId, (err, usuarioId, eventoId) => {
         if (err) {
-            console.error("Error al aceptar inscripción:", err.message);
-            res.status(500).send("Error al aceptar inscripción.");
-        } else {
-            res.redirect('back'); // Volver a la lista de espera
+            if (err.code === "00") {
+                // Error de capacidad: responder con mensaje claro al cliente
+                return res.status(400).json({ 
+                    success: false, 
+                    message: "No se puede aceptar. El evento ya está lleno." 
+                });
+            } else {
+                // Otros errores: responder con mensaje genérico
+                return res.status(500).json({ 
+                    success: false, 
+                    message: "Error al aceptar inscripción." 
+                });
+            }
         }
+
+        // Enviar notificación al usuario aceptado
+        const asuntoUsuario = "Has sido promovido al estado inscrito";
+        const mensajeUsuario = `Has sido promovido desde la lista de espera al estado inscrito en el evento: ${eventoId}.`;
+
+        daoCorreos.enviarNotificacion("Sistema", usuarioId, asuntoUsuario, mensajeUsuario, (err) => {
+            if (err) {
+                console.error("Error al enviar notificación al usuario:", err);
+            }
+        });
+
+        // Enviar notificación al organizador del evento
+        daoEventos.obtenerDatosOrganizador(eventoId, (err, organizador) => {
+            if (!err && organizador) {
+                const asuntoOrg = "Un usuario ha sido promovido";
+                const mensajeOrg = `Un usuario ha sido promovido desde la lista de espera al estado inscrito en tu evento: ${eventoId}.`;
+
+                daoCorreos.enviarNotificacion("Sistema", organizador.organizador_id, asuntoOrg, mensajeOrg, (err) => {
+                    if (err) {
+                        console.error("Error al enviar notificación al organizador:", err);
+                    }
+                });
+            }
+        });
+
+        // Responder con éxito
+        res.json({ 
+            success: true, 
+            message: "Usuario aceptado desde la lista de espera." 
+        });
     });
 });
+
+
 
 
 router.post('/rechazarListaEspera/:id', (req, res) => {
     const inscripcionId = req.params.id;
+    const daoEventos = req.daoEventos;
+    const daoCorreos = req.daoCorreos;
 
-    req.daoEventos.rechazarListaEspera(inscripcionId, (err) => {
+    daoEventos.rechazarListaEspera(inscripcionId, (err, usuarioId, eventoId) => {
         if (err) {
-            console.error("Error al rechazar inscripción:", err.message);
             res.status(500).send("Error al rechazar inscripción.");
         } else {
-            res.redirect('back'); // Volver a la lista de espera
+            // Notificar al usuario rechazado
+            const asuntoUsuario = "Inscripción rechazada";
+            const mensajeUsuario = `Lamentamos informarte que no has sido aceptado en el evento: ${eventoId}.`;
+            daoCorreos.enviarNotificacion("Sistema", usuarioId, asuntoUsuario, mensajeUsuario, (err) => {
+                if (err) console.error("Error al enviar notificación al usuario:", err);
+            });
+
+            res.redirect('back');
         }
     });
 });
+
+
+
 
 
 module.exports = router;
