@@ -113,11 +113,9 @@ $(document).ready(function () {
 
     // Función para aplicar la paleta de colores
     function aplicarPaletaColores(paleta) {
-        $('body').removeClass('alto-contraste daltonismo');
+        $('body').removeClass('alto-contraste');
         if (paleta === 'alto-contraste') {
             $('body').addClass('alto-contraste');
-        } else if (paleta === 'daltonismo') {
-            $('body').addClass('daltonismo');
         }
     }
 

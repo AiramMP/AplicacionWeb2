@@ -146,16 +146,46 @@ h1 {
   margin-bottom: 200px; /* Ajusta el valor según tus necesidades */
 }
 
-
 /* Paleta de colores */
 .alto-contraste {
   background-color: #000;
   color: #fff;
 }
 
-.daltonismo {
-  background-color: #f0f0f0;
-  color: #333;
+body.alto-contraste .modal-content {
+  background-color: #2c2c2c; /* Fondo oscuro */
+  color: #ffffff; /* Texto claro */
+  border: 1px solid #444444; /* Borde para dar contraste */
+}
+
+body.alto-contraste .modal-header, 
+body.alto-contraste .modal-footer {
+  background-color: #3b3b3b; /* Fondo un poco más claro */
+  border-bottom: 1px solid #555555; /* Borde para separar */
+}
+
+body.alto-contraste .btn-close {
+  filter: invert(1); /* Invertir color del botón de cerrar */
+}
+
+body.alto-contraste .btn-primary {
+  background-color: #5555ff; /* Color más accesible */
+  border-color: #4444cc;
+}
+
+body.alto-contraste .btn-secondary {
+  background-color: #444444;
+  border-color: #333333;
+  color: #ffffff;
+}
+
+.alto-contraste .card {
+  background-color: #1d2124; /* Fondo más oscuro para accesibilidad */
+  color: #ffffff; /* Texto blanco */
+}
+
+.alto-contraste .card img {
+  border-color: #ffffff; /* Borde blanco */
 }
 
 /* Tamaño de texto */
@@ -171,3 +201,37 @@ h1 {
   font-size: 20px;
 }
 
+/* Modo Alto Contraste */
+.alto-contraste h1 {
+  color: #ffffff; /* Texto blanco */
+}
+
+.alto-contraste .header {
+  background-color: #1d2124; /* Fondo oscuro */
+  color: #ffffff; /* Texto blanco */
+  border-bottom: 1px solid #444; /* Borde oscuro */
+}
+
+.alto-contraste .navbar {
+  background-color: #1d2124 !important; /* Fondo oscuro para la barra de navegación */
+  color: #ffffff; /* Texto blanco */
+}
+
+.alto-contraste .navbar-nav .nav-link {
+  color: #ffffff; /* Enlaces blancos */
+}
+
+.alto-contraste .navbar-nav .nav-link:hover {
+  color: #f8f9fa; /* Color más claro al pasar el cursor */
+}
+
+.alto-contraste .btn {
+  background-color: #444; /* Fondo de botones */
+  color: #ffffff; /* Texto blanco */
+  border-color: #555; /* Borde oscuro */
+}
+
+.alto-contraste .btn:hover {
+  background-color: #555; /* Fondo más claro al pasar el cursor */
+  border-color: #666; /* Borde más claro */
+}

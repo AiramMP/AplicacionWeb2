@@ -13,3 +13,35 @@
 .card-text{
     font-size:1.5rem;
 }
+
+/* Ajustes para el tamaño del texto */
+.texto-pequeno .card-text,
+.texto-pequeno .card-title {
+    font-size: 1rem;
+}
+
+.texto-mediano .card-text,
+.texto-mediano .card-title {
+    font-size: 1.5rem;
+}
+
+.texto-grande .card-text,
+.texto-grande .card-title {
+    font-size: 2rem;
+}
+
+/* Ajustes para el tamaño de las imágenes */
+.texto-pequeno .card img {
+    max-width: 80%;
+    height: auto;
+}
+
+.texto-mediano .card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.texto-grande .card img {
+    max-width: 108%;
+    height: auto;
+}
