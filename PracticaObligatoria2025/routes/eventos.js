@@ -20,6 +20,7 @@ router.get("/", function (req, res) {
                 error: "No se pudo cargar la lista de eventos",
             });
         } else {
+            console.log(eventos);
             res.render("eventos", {
                 eventos: eventos,
                 configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},

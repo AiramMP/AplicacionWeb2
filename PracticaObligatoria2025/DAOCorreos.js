@@ -9,26 +9,37 @@ class DAOCorreos {
                 callback(err, null);
             } else {
                 const sql = `
-                            SELECT c.id, u.nombre AS emisor, c.Asunto, c.Mensaje, c.Fecha, c.Visto
-                            FROM correos c
-                            JOIN usuarios u ON c.CorreoEmisor = u.id
-                            WHERE c.CorreoReceptor = ?
-                            ORDER BY c.Fecha DESC`;
-connection.query(sql, [usuarioId.toString()], function (err, resultados) {
-    connection.release();
-    console.log("Receptor ID (como string):", usuarioId.toString());
-    console.log("Resultados de correos:", resultados);
-
-    if (err) {
-        callback(err, null);
-    } else {
-        callback(null, resultados);
-    }
-});
-
+                    SELECT 
+                        c.id, 
+                        CASE 
+                            WHEN c.CorreoEmisor = 'Sistema' THEN 'Sistema'
+                            ELSE u.nombre 
+                        END AS emisor, 
+                        c.Asunto, 
+                        c.Mensaje, 
+                        DATE_FORMAT(c.fecha, '%a %b %d %Y %H:%i') AS Fecha, 
+                        c.Visto
+                    FROM correos c
+                    LEFT JOIN usuarios u ON c.CorreoEmisor = u.id
+                    WHERE c.CorreoReceptor = ?
+                    ORDER BY c.Fecha DESC
+                `;
+    
+                connection.query(sql, [usuarioId], function (err, resultados) {
+                    connection.release();
+                    console.log("Receptor ID:", usuarioId);
+                    console.log("Resultados de correos:", resultados);
+    
+                    if (err) {
+                        callback(err, null);
+                    } else {
+                        callback(null, resultados);
+                    }
+                });
             }
         });
     }
+    
     
 
     enviarCorreo(emisorId, receptorId, asunto, mensaje, callback) {
@@ -54,9 +65,18 @@ connection.query(sql, [usuarioId.toString()], function (err, resultados) {
 
     verCorreo(correoId, callback) {
         const sql = `
-            SELECT c.id, u.nombre AS CorreoEmisor, c.asunto AS Asunto, c.mensaje AS Mensaje, c.fecha AS Fecha, c.visto AS Visto
+            SELECT 
+                c.id, 
+                CASE 
+                    WHEN c.CorreoEmisor = 'Sistema' THEN 'Sistema'
+                    ELSE u.nombre 
+                END AS CorreoEmisor, 
+                c.asunto AS Asunto, 
+                c.mensaje AS Mensaje, 
+                DATE_FORMAT(c.fecha, '%a %b %d %Y %H:%i') AS Fecha, 
+                c.visto AS Visto
             FROM correos c
-            JOIN usuarios u ON c.CorreoEmisor = u.id
+            LEFT JOIN usuarios u ON c.CorreoEmisor = u.id
             WHERE c.id = ?
         `;
         this.pool.getConnection((err, connection) => {
@@ -74,8 +94,6 @@ connection.query(sql, [usuarioId.toString()], function (err, resultados) {
             }
         });
     }
-    
-    
     
 
     marcarComoLeido(correoId, callback) {

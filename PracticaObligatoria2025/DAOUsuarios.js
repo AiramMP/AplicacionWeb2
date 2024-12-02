@@ -6,24 +6,32 @@ class DAOUsuarios{
         this.pool = pools;
     }
 
-    cogerEventos(callback){
-        this.pool.getConnection(function(err, connection){
-            if(err){
+    cogerEventos(callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
                 callback(err, null);
-            } else{
-                const sql = 'SELECT * FROM EVENTOS';
-                connection.query(sql, [], function(err, datos){
+            } else {
+                const sql = `
+                    SELECT id, titulo, descripcion, 
+                           DATE_FORMAT(fecha, '%a %b %d %Y') AS fecha, 
+                           TIME_FORMAT(hora, '%H:%i') AS hora, 
+                           ubicacion, capacidad_maxima, capacidad_restante, organizador_id, 
+                           foto
+                    FROM eventos
+                `;
+                connection.query(sql, [], function (err, datos) {
                     connection.release();
-                    if(err){
+                    if (err) {
                         callback(err, null);
-                    }else{
+                    } else {
                         callback(null, datos);
                     }
-
                 });
             }
         });
     }
+    
+    
 
     miPerfil(usuario,callback){
         this.pool.getConnection(function (err, connection) {

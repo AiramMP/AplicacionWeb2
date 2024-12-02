@@ -8,22 +8,29 @@ class DAOEventos {
 
     // Listar todos los eventos
     listarEventos(callback) {
-        this.pool.getConnection(function (err, connection) {
+        this.pool.getConnection((err, connection) => {
             if (err) {
                 callback(err, null);
             } else {
-                const sql = "SELECT * FROM eventos";
-                connection.query(sql, [], function (err, datos) {
+                const sql = `
+                    SELECT id, titulo, descripcion, 
+                           DATE_FORMAT(fecha, '%a %b %d %Y') AS fecha, 
+                           TIME_FORMAT(hora, '%H:%i') AS hora, 
+                           ubicacion, capacidad_maxima, capacidad_restante 
+                    FROM eventos
+                `;
+                connection.query(sql, [], (err, resultados) => {
                     connection.release();
                     if (err) {
                         callback(err, null);
                     } else {
-                        callback(null, datos);
+                        callback(null, resultados);
                     }
                 });
             }
         });
     }
+    
 
     inscribirseEvento(usuarioId, id_evento, callback) {
         console.log("Entrando a inscribirseEvento con usuarioId:", usuarioId, "y id_evento:", id_evento);
