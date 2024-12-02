@@ -16,6 +16,7 @@ router.get('/', function(request, response){
                 usuario:request.session.usuario,
                 idUsuario: request.session.userId,
                 rol: request.session.rol,
+                configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
                 error:"No se pudo cargar los eventos de la universidad"
             })
         }else{
@@ -23,6 +24,7 @@ router.get('/', function(request, response){
             console.log(request.session);
             response.render('eventos', {eventos:datos,
                 foto:request.session.foto,
+                configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
                 idUsuario: request.session.userId,
@@ -42,6 +44,7 @@ router.get('/miperfil', function(request, response){
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
                 rol: request.session.rol,
+                configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
                 error:"No se pudo cargar el perfil del usuario"
             })
         }else{
@@ -50,6 +53,7 @@ router.get('/miperfil', function(request, response){
                 nombre:request.session.nombre,
                 usuario:request.session.usuario,
                 rol: request.session.rol,
+                configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
             });
         }
     });
@@ -66,6 +70,7 @@ router.post('/cambiarFoto', multerFactory.single('foto'), function(request, resp
             nombre:request.session.nombre,
             usuario:request.session.usuario,
             rol: request.session.rol,
+            configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
           error:"No se pudo cambiar la foto de perfil del usuario"
         })
       }else{
@@ -85,6 +90,7 @@ router.get('/misInscripciones', function (request, response) {
                 nombre: request.session.nombre,
                 usuario: request.session.usuario,
                 rol: request.session.rol,
+                configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
                 error: "No se pudo cargar las inscripciones del usuario"
             });
         } else {
@@ -94,6 +100,7 @@ router.get('/misInscripciones', function (request, response) {
                 nombre: request.session.nombre,
                 usuario: request.session.usuario,
                 rol: request.session.rol,
+                configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},
             });
         }
     });

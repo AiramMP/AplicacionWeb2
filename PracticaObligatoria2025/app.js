@@ -71,6 +71,21 @@ app.use((request, response, next) =>{
 });
 
 app.use((req, res, next) => {
+  if (req.session.userId) {
+      req.daoAccesibilidad.obtenerConfiguracion(req.session.userId, (err, configuracion) => {
+          if (err) {
+              console.error("Error al cargar configuración de accesibilidad:", err);
+          } else {
+              req.session.configuracionAccesibilidad = configuracion || {};
+          }
+          next();
+      });
+  } else {
+      next();
+  }
+});
+
+app.use((req, res, next) => {
   console.log("Contenido de la sesión:", req.session);
   next();
 });
@@ -92,6 +107,7 @@ app.use('/accesibilidad', accesibilidadRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {

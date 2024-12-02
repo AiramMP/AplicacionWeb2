@@ -145,3 +145,29 @@ h1 {
 .extra-margin-bottom {
   margin-bottom: 200px; /* Ajusta el valor según tus necesidades */
 }
+
+
+/* Paleta de colores */
+.alto-contraste {
+  background-color: #000;
+  color: #fff;
+}
+
+.daltonismo {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Tamaño de texto */
+.texto-pequeno {
+  font-size: 12px;
+}
+
+.texto-mediano {
+  font-size: 16px;
+}
+
+.texto-grande {
+  font-size: 20px;
+}
+

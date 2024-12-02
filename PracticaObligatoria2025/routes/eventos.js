@@ -13,6 +13,7 @@ router.get("/", function (req, res) {
             res.status(500);
             res.render("error", {
                 foto: req.session.foto,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
                 rol: req.session.rol,
@@ -21,6 +22,7 @@ router.get("/", function (req, res) {
         } else {
             res.render("eventos", {
                 eventos: eventos,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 foto: req.session.foto,
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
@@ -148,6 +150,7 @@ router.get("/misInscripciones", function (req, res) {
             res.status(500);
             res.render("error", {
                 foto: req.session.foto,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
                 rol: req.session.rol,
@@ -156,6 +159,7 @@ router.get("/misInscripciones", function (req, res) {
         } else {
             res.render("misInscripciones", {
                 inscripciones: inscripciones,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 foto: req.session.foto,
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
@@ -168,6 +172,7 @@ router.get("/misInscripciones", function (req, res) {
 router.get('/crearEvento', function (req, res) {
     res.render('crearEvento', {
         nombre: req.session.nombre,
+        configuracionAccesibilidad: req.session.configuracionAccesibilidad,
         rol: req.session.rol,
         usuario: req.session.usuario,
         foto: req.session.foto,
@@ -245,6 +250,7 @@ router.get('/misEventos', function (req, res) {
             res.status(500);
             res.render('error', {
                 foto: req.session.foto,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
                 rol: req.session.rol,
@@ -253,6 +259,7 @@ router.get('/misEventos', function (req, res) {
         } else {
             res.render('misEventos', {
                 eventos: eventos,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 foto: req.session.foto,
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
@@ -278,6 +285,7 @@ router.get('/editar/:id', (req, res) => {
                     hora: horaFormateada
                 },
                 error: null,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 rol: req.session.rol,
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
@@ -318,7 +326,8 @@ router.post('/editar/:id', upload.single('foto'), (req, res) => {
                             fecha: evento.fecha.toISOString().split('T')[0], // Formato para input date
                             hora: evento.hora.slice(0, 5) // Formato para input time
                         },
-                        error: err.message, // Pasamos el mensaje de error
+                        error: err.message,
+                        configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                         foto: req.session.foto,
                         nombre: req.session.nombre,
                         usuario: req.session.usuario,
@@ -344,6 +353,7 @@ router.get('/listaEspera/:id', (req, res) => {
                 foto: req.session.foto,
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 rol: req.session.rol
             });
         } else {
@@ -353,6 +363,7 @@ router.get('/listaEspera/:id', (req, res) => {
                 foto: req.session.foto,
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
                 rol: req.session.rol
             });
         }

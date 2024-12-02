@@ -13,6 +13,7 @@ router.get('/misnotificaciones', function (req, res) {
             nombre: req.session.nombre,
             usuario: req.session.usuario,
             rol: req.session.rol,
+            configuracionAccesibilidad: req.session.configuracionAccesibilidad,
             message: "No se pudo obtener el usuario.",
             error: {}
         });
@@ -26,6 +27,7 @@ router.get('/misnotificaciones', function (req, res) {
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
                 rol: req.session.rol,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad,
                 message: "No se pudieron cargar las notificaciones.",
                 error: err
             });
@@ -36,6 +38,7 @@ router.get('/misnotificaciones', function (req, res) {
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
                 rol: req.session.rol,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad,
             });
         }
     });
@@ -132,6 +135,7 @@ router.post('/enviar', function (req, res) {
                 nombre: req.session.nombre,
                 usuario: req.session.usuario,
                 rol: req.session.rol,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad,
                 error: "No se pudo enviar el correo."
             });
         } else {

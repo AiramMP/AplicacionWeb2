@@ -1,4 +1,19 @@
 $(document).ready(function () {
+    // Aplicar configuraciones al cargar la página
+    if (window.configuracionAccesibilidad) {
+        const config = window.configuracionAccesibilidad;
+
+        if (config.paleta_colores) {
+            aplicarPaletaColores(config.paleta_colores);
+        }
+        if (config.tamano_texto) {
+            aplicarTamanoTexto(config.tamano_texto);
+        }
+        if (config.configuracion_navegacion !== undefined) {
+            aplicarSubrayadoEnlaces(config.configuracion_navegacion === 1);
+        }
+    }
+
     // Botón para abrir el modal de configuración de accesibilidad
     $('#btnAccesibilidad').on('click', function () {
         $.ajax({
