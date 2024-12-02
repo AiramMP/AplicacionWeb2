@@ -45,3 +45,12 @@
     max-width: 108%;
     height: auto;
 }
+
+#calendar {
+    height: auto;
+    width: 100%;
+    max-height: 600px; /* Ajusta el tamaño según el modal */
+    overflow-y: auto;
+}
+
+

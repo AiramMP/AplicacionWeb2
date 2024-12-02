@@ -18,6 +18,8 @@ class DAOUsuarios{
                            ubicacion, capacidad_maxima, capacidad_restante, organizador_id, 
                            foto
                     FROM eventos
+                    WHERE CONCAT(fecha, ' ', hora) >= NOW() -- Filtrar eventos futuros o actuales
+                    ORDER BY fecha ASC, hora ASC -- Ordenar por fecha y hora
                 `;
                 connection.query(sql, [], function (err, datos) {
                     connection.release();
@@ -30,6 +32,30 @@ class DAOUsuarios{
             }
         });
     }
+    
+
+    cogerEventosCalendario(callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) return callback(err);
+    
+            const sql = `
+                SELECT id, titulo, descripcion, 
+                       DATE_FORMAT(fecha, '%Y-%m-%d') AS fecha, 
+                       TIME_FORMAT(hora, '%H:%i:%s') AS hora, 
+                       ubicacion, capacidad_maxima, capacidad_restante, organizador_id, 
+                       foto
+                FROM eventos
+                WHERE fecha >= CURDATE() -- Solo eventos futuros
+            `;
+    
+            connection.query(sql, [], (err, datos) => {
+                connection.release();
+                if (err) return callback(err);
+                callback(null, datos);
+            });
+        });
+    }
+    
     
     
 

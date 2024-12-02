@@ -93,3 +93,48 @@ $(document).on('click', '.aceptar-lista-espera', function () {
         }
     });
 });
+
+
+$(document).ready(function () {
+    $('#btnCalendario').on('click', function () {
+        $('#loadingSpinner').show(); // Mostrar el spinner
+        
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: '/eventos/calendario',
+            eventClick: function (info) {
+                if (confirm(`¿Quieres inscribirte al evento "${info.event.title}"?`)) {
+                    $.ajax({
+                        url: `/eventos/inscribirse`,
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ id: info.event.id }),
+                        success: function () {
+                            alert('Inscripción realizada con éxito');
+                            calendar.refetchEvents();
+                        },
+                        error: function () {
+                            alert('Error al inscribirse al evento');
+                        }
+                    });
+                }
+            },
+            loading: function (isLoading) {
+                if (!isLoading) {
+                    $('#loadingSpinner').hide(); // Ocultar el spinner cuando termine de cargar
+                }
+            }
+        });
+        calendar.render(); // Renderizar el calendario
+    });
+    
+});
+
+

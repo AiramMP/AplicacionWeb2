@@ -450,6 +450,43 @@ router.post('/rechazarListaEspera/:id', (req, res) => {
     });
 });
 
+router.get('/calendario', (req, res) => {
+    const start = req.query.start;
+    const end = req.query.end;
+
+    if (start && end) {
+        // Filtrar eventos por rango de fechas
+        req.daoEventos.obtenerEventosPorRango(start, end, (err, eventos) => {
+            if (err) {
+                res.status(500).send('Error al cargar los eventos');
+            } else {
+                const eventosCalendario = eventos.map(evento => ({
+                    id: evento.id,
+                    title: evento.titulo,
+                    start: `${evento.fecha}T${evento.hora}`,
+                    description: evento.descripcion,
+                }));
+                res.json(eventosCalendario);
+            }
+        });
+    } else {
+        // Devolver todos los eventos
+        req.daoEventos.cogerEventosCalendario((err, eventos) => {
+            if (err) {
+                res.status(500).send('Error al cargar los eventos');
+            } else {
+                const eventosCalendario = eventos.map(evento => ({
+                    id: evento.id,
+                    title: evento.titulo,
+                    start: `${evento.fecha}T${evento.hora}`,
+                    description: evento.descripcion,
+                }));
+                res.json(eventosCalendario);
+            }
+        });
+    }
+});
+
 
 
 
