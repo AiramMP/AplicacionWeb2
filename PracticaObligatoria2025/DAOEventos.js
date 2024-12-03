@@ -248,7 +248,18 @@ class DAOEventos {
                 callback(err, null);
             } else {
                 const sql = `
-                    SELECT * FROM eventos
+                    SELECT 
+                        id, 
+                        titulo, 
+                        descripcion, 
+                        ubicacion, 
+                        capacidad_maxima, 
+                        capacidad_restante, 
+                        organizador_id, 
+                        foto,
+                        DATE_FORMAT(fecha, '%W %M %d %Y') AS fecha_formateada,
+                        DATE_FORMAT(hora, '%H:%i') AS hora_formateada
+                    FROM eventos
                     WHERE organizador_id = ?
                 `;
                 connection.query(sql, [organizadorId], function (err, resultados) {
@@ -263,6 +274,7 @@ class DAOEventos {
             }
         });
     }
+    
     
     editarEvento(eventoId, datos, callback) {
         this.pool.getConnection((err, connection) => {
@@ -507,6 +519,33 @@ class DAOEventos {
             });
         });
     }
+
+    //////////////////////////////////////
+    obtenerHistorialAsistentes(eventoId, callback) {
+        this.pool.getConnection(function (err, connection) {
+            if (err) {
+                callback(err, null);
+            } else {
+                const sql = `
+                    SELECT u.nombre, u.correo, i.fecha_inscripcion
+                    FROM inscripciones i
+                    JOIN usuarios u ON i.usuario_id = u.id
+                    WHERE i.evento_id = ?
+                `;
+                connection.query(sql, [eventoId], function (err, resultados) {
+                    connection.release();
+                    if (err) {
+                        callback(err, null);
+                    } else {
+                        callback(null, resultados);
+                    }
+                });
+            }
+        });
+    }
+    
+    
+    
     
     
     

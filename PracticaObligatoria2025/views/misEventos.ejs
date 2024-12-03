@@ -42,7 +42,7 @@
                                 <p class="card-text"><%= evento.descripcion %></p>
                                 <p class="card-text">
                                     <small class="text-muted">
-                                        Fecha: <%= evento.fecha %> | Hora: <%= evento.hora %>
+                                        Fecha: <%= evento.fecha_formateada %> | Hora: <%= evento.hora_formateada %>
                                     </small>
                                 </p>
                                 <p class="card-text">
@@ -58,10 +58,14 @@
                                     <form action="/eventos/editar/<%= evento.id %>" method="GET" class="me-2">
                                         <button type="submit" class="btn btn-warning">Editar Evento</button>
                                     </form>
-                                    <form action="/eventos/listaEspera/<%= evento.id %>" method="GET">
+                                    <form action="/eventos/listaEspera/<%= evento.id %>" method="GET" class="me-2">
                                         <button type="submit" class="btn btn-info">Gestionar Lista de Espera</button>
                                     </form>
+                                    <form action="/eventos/historialAsistentes/<%= evento.id %>" method="GET">
+                                        <button type="submit" class="btn btn-secondary">Historial de Asistentes</button>
+                                    </form>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>

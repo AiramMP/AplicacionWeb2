@@ -80,7 +80,7 @@ router.get('/misnotificaciones', function (req, res) {
 router.get("/verNotificacion/:id", (req, res) => {
     const correoId = req.params.id;
     const dao = req.daoCorreos;
-    console.log("El correo es este (desde correos.js --> 80)" + correoId);
+    
     dao.verCorreo(correoId, (err, correo) => {
         if (err) {
             console.error("Error al obtener el correo:", err);

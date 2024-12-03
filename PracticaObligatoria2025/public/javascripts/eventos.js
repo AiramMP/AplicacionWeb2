@@ -137,4 +137,56 @@ $(document).ready(function () {
     
 });
 
+$(document).on('click', '.btn-historial', function () {
+    const eventoId = $(this).data('id');
+
+    // Actualizar el título del modal dinámicamente
+    $('#historialModalLabel').text(`Historial de Asistentes del Evento ${eventoId}`);
+
+    // Solicitud AJAX para obtener el historial
+    $.ajax({
+        url: `/eventos/historialAsistentes/${eventoId}`,
+        method: 'GET',
+        success: function (data) {
+            let content = '';
+
+            if (data.length === 0) {
+                content = '<p class="text-center">No hay asistentes registrados para este evento.</p>';
+            } else {
+                content = `
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Fecha de Inscripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                data.forEach(asistente => {
+                    content += `
+                        <tr>
+                            <td>${asistente.nombre}</td>
+                            <td>${asistente.correo}</td>
+                            <td>${new Date(asistente.fecha_inscripcion).toLocaleString()}</td>
+                        </tr>
+                    `;
+                });
+                content += `
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            // Cargar el contenido en el modal
+            $('#historialModal .modal-body').html(content);
+        },
+        error: function () {
+            $('#historialModal .modal-body').html('<p class="text-center text-danger">Error al cargar el historial de asistentes.</p>');
+        }
+    });
+});
+
+
 

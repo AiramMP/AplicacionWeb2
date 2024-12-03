@@ -487,6 +487,34 @@ router.get('/calendario', (req, res) => {
     }
 });
 
+router.get('/historialAsistentes/:id', (req, res) => {
+    const eventoId = req.params.id;
+    const daoEventos = req.daoEventos;
+
+    daoEventos.obtenerHistorialAsistentes(eventoId, (err, asistentes) => {
+        if (err) {
+            console.error("Error al obtener historial de asistentes:", err);
+            res.status(500).send("Error al obtener el historial de asistentes.");
+        } else {
+            res.render('historialAsistentes', { 
+                asistentes, 
+                eventoId,
+                nombre: req.session.nombre,
+                configuracionAccesibilidad: req.session.configuracionAccesibilidad, // Asegúrate de que esta variable exista en la sesión
+                rol: req.session.rol, // Asegúrate de pasar esta variable
+                usuario: req.session.usuario,
+                foto: req.session.foto 
+            });
+        }
+    });
+});
+
+
+
+
+
+
+
 
 
 
