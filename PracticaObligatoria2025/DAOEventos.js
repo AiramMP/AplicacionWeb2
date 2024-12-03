@@ -516,7 +516,27 @@ class DAOEventos {
         });
     }
     
-
+    verificarInscripcion(usuarioId, eventoId, callback) {
+        const sql = `
+            SELECT COUNT(*) AS count 
+            FROM inscripciones 
+            WHERE usuario_id = ? AND evento_id = ?
+        `;
+        this.pool.getConnection((err, connection) => {
+            if (err) return callback(err);
+    
+            connection.query(sql, [usuarioId, eventoId], (err, results) => {
+                connection.release();
+                if (err) {
+                    callback(err);
+                } else {
+                    const estaInscrito = results[0].count > 0;
+                    callback(null, estaInscrito);
+                }
+            });
+        });
+    }
+    
     //////////////////////////////////////
     obtenerHistorialAsistentes(eventoId, callback) {
         this.pool.getConnection(function (err, connection) {

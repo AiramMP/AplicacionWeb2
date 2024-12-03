@@ -45,29 +45,41 @@ router.post('/inscribirse', (req, res) => {
         return;
     }
 
-    daoEventos.inscribirseEvento(usuarioId, idEvento, (err, estado) => {
+    daoEventos.verificarInscripcion(usuarioId, idEvento, (err, estaInscrito) => {
         if (err) {
             res.status(500).json({ success: false, message: "Error interno del servidor." });
+        } else if (estaInscrito) {
+            res.json({ success: true, message: "Ya estás inscrito en este evento." });
         } else {
-            // Obtener datos del organizador para notificarle
-            daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
+            daoEventos.inscribirseEvento(usuarioId, idEvento, (err, estado) => {
                 if (err) {
-                    console.error("Error al obtener datos del organizador:", err);
+                    res.status(500).json({ success: false, message: "Error interno del servidor." });
                 } else {
-                    const asunto = "Nueva inscripción a tu evento";
-                    const mensaje = `El usuario ${usuarioCorreo} se ha inscrito en tu evento con ID ${idEvento}.`;
-                    daoCorreos.enviarNotificacion(usuarioId, organizador.organizador_id, asunto, mensaje, (err) => {
+                    // Obtener datos del organizador para notificarle
+                    daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
                         if (err) {
-                            console.error("Error al enviar notificación al organizador:", err);
+                            console.error("Error al obtener datos del organizador:", err);
+                        } else {
+                            const asunto = "Nueva inscripción a tu evento";
+                            const mensaje = `El usuario ${usuarioCorreo} se ha inscrito en tu evento con ID ${idEvento}.`;
+                            daoCorreos.enviarNotificacion(usuarioId, organizador.organizador_id, asunto, mensaje, (err) => {
+                                if (err) {
+                                    console.error("Error al enviar notificación al organizador:", err);
+                                }
+                            });
                         }
+                    });
+
+                    res.json({ 
+                        success: true, 
+                        message: estado === "inscrito" ? "Inscripción exitosa." : "Añadido a la lista de espera." 
                     });
                 }
             });
-
-            res.json({ success: true, message: estado === "inscrito" ? "Inscripción exitosa." : "Añadido a la lista de espera." });
         }
     });
 });
+
 
 
 

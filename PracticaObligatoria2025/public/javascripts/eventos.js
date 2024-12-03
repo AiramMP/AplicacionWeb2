@@ -111,22 +111,29 @@ $(document).ready(function () {
         },
         eventClick: function (info) {
             console.log('Evento clickeado:', info.event);
-            if (confirm(`¿Quieres inscribirte al evento "${info.event.title}"?`)) {
-                $.ajax({
-                    url: `/eventos/inscribirse`,
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ id: info.event.id }),
-                    success: function () {
-                        alert('Inscripción realizada con éxito');
+            $.ajax({
+                url: `/eventos/inscribirse`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ id: info.event.id }),
+                success: function (response) {
+                    if (response.success) {
+                        if (response.message === "Ya estás inscrito en este evento.") {
+                            alert(response.message);
+                        } else {
+                            alert(response.message); // Mostrar mensaje según la respuesta (Éxito o Lista de espera)
+                        }
                         calendar.refetchEvents(); // Recargar eventos
-                    },
-                    error: function () {
-                        alert('Error al inscribirse al evento');
+                    } else {
+                        alert('Error: ' + response.message);
                     }
-                });
-            }
+                },
+                error: function () {
+                    alert('Error al inscribirse al evento');
+                }
+            });
         }
+        
     });
     
 
