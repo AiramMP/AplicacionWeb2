@@ -5,10 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mysql = require('mysql');
 
-
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -44,7 +42,7 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore,
   cookie: {
-    maxAge: 3600000 // 1 hora en milisegundos para la cookie
+    maxAge: 3600000
   }
 }));
 
@@ -53,7 +51,6 @@ const DAOSesiones = require('./DAOSesiones');
 const DAOEventos = require("./DAOEventos");
 const DAOCorreos = require('./DAOCorreos');
 const DAOAccesibilidad = require('./DAOAccesibilidad')
-
 
 const daoSesiones = new DAOSesiones(pools);
 const daoUsuarios = new DAOUsuarios(pools);
@@ -85,11 +82,34 @@ app.use((req, res, next) => {
   }
 });
 
+//poniendo '127.0.0.1', '::1' se banea el IP
+const blackListIPs = [
+  '127.0.0.2',
+  '::2'        
+];
+
+app.use((req, res, next) => {
+  const clientIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
+  let normalizedIP = clientIP;
+  if (clientIP.startsWith('::ffff:')) {
+      normalizedIP = clientIP.split('::ffff:')[1];
+  }
+
+  console.log(`IP detectada: ${normalizedIP}`);
+
+  if (blackListIPs.includes(normalizedIP)) {
+      console.log(`Acceso denegado para la IP: ${normalizedIP}`);
+      return res.status(403).send('Acceso denegado: su dirección IP no está permitida.');
+  }
+
+  next();
+});
+
 app.use((req, res, next) => {
   console.log("Contenido de la sesión:", req.session);
   next();
 });
-
 
 var sesionRouter = require('./routes/sesion');
 var usuariosRouter = require('./routes/usuarios');
@@ -103,19 +123,13 @@ app.use('/eventos', eventosRouter);
 app.use('/correos', correosRouter);
 app.use('/accesibilidad', accesibilidadRouter);
 
-// catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
-// error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
