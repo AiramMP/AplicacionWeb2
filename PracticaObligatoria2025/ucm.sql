@@ -31,8 +31,7 @@ CREATE TABLE `configuracionaccesibilidad` (
   `id` int(11) NOT NULL,
   `usuario_id` int(11) NOT NULL,
   `paleta_colores` varchar(255) DEFAULT NULL,
-  `tamano_texto` varchar(50) DEFAULT NULL,
-  `configuracion_navegacion` varchar(255) DEFAULT NULL
+  `tamano_texto` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

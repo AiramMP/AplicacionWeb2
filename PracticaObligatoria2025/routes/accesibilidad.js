@@ -4,12 +4,11 @@ const router = express.Router();
 // Guardar configuración de accesibilidad
 router.post('/guardar', (req, res) => {
     const usuarioId = req.session.userId; // Obtenemos el ID del usuario autenticado
-    const { paleta_colores, tamano_texto, configuracion_navegacion } = req.body;
+    const { paleta_colores, tamano_texto} = req.body;
 
     req.daoAccesibilidad.guardarConfiguracion(usuarioId, {
         paleta_colores,
-        tamano_texto,
-        configuracion_navegacion
+        tamano_texto
     }, (err) => {
         if (err) {
             console.error("Error al guardar la configuración de accesibilidad:", err);

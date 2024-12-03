@@ -235,3 +235,12 @@ body.alto-contraste .btn-secondary {
   background-color: #555; /* Fondo más claro al pasar el cursor */
   border-color: #666; /* Borde más claro */
 }
+
+button:focus {
+  outline: 2px solid #007bff; /* Resalta el botón cuando tiene foco */
+}
+
+.btn:focus{
+  outline: 2px solid #007bff !important;
+}
+

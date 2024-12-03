@@ -4,7 +4,7 @@ class DAOAccesibilidad {
     }
 
     guardarConfiguracion(usuarioId, configuracion, callback) {
-        const { paleta_colores, tamano_texto, configuracion_navegacion } = configuracion;
+        const { paleta_colores, tamano_texto} = configuracion;
         this.pool.getConnection((err, connection) => {
             if (err) return callback(err);
 
@@ -26,10 +26,10 @@ class DAOAccesibilidad {
 
                     // Insertar la nueva configuración
                     const sqlInsert = `
-                        INSERT INTO configuracionaccesibilidad (usuario_id, paleta_colores, tamano_texto, configuracion_navegacion)
-                        VALUES (?, ?, ?, ?)
+                        INSERT INTO configuracionaccesibilidad (usuario_id, paleta_colores, tamano_texto)
+                        VALUES (?, ?, ?)
                     `;
-                    connection.query(sqlInsert, [usuarioId, paleta_colores, tamano_texto, configuracion_navegacion], (err) => {
+                    connection.query(sqlInsert, [usuarioId, paleta_colores, tamano_texto], (err) => {
                         if (err) {
                             return connection.rollback(() => {
                                 connection.release();

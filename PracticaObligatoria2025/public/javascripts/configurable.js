@@ -9,9 +9,6 @@ $(document).ready(function () {
         if (config.tamano_texto) {
             aplicarTamanoTexto(config.tamano_texto);
         }
-        if (config.configuracion_navegacion !== undefined) {
-            aplicarSubrayadoEnlaces(config.configuracion_navegacion === 1);
-        }
     }
 
     // Botón para abrir el modal de configuración de accesibilidad
@@ -56,10 +53,6 @@ $(document).ready(function () {
                     $('#fontSize').val(data.tamano_texto);
                     aplicarTamanoTexto(data.tamano_texto);
                 }
-                if (data.configuracion_navegacion !== undefined) {
-                    $('#underlineLinks').prop('checked', data.configuracion_navegacion === 1);
-                    aplicarSubrayadoEnlaces(data.configuracion_navegacion === 1);
-                }
             },
             error: function () {
                 alert('Error al cargar configuraciones de accesibilidad.');
@@ -71,8 +64,7 @@ $(document).ready(function () {
     $(document).on('click', '#guardarConfiguracion', function () {
         const configuracion = {
             paleta_colores: $('#sectionColor').val(),
-            tamano_texto: $('#fontSize').val(),
-            configuracion_navegacion: $('#underlineLinks').is(':checked') ? 1 : 0
+            tamano_texto: $('#fontSize').val()
         };
 
         $.ajax({
@@ -85,7 +77,6 @@ $(document).ready(function () {
                 $('#configModal').modal('hide'); // Cerrar el modal
                 aplicarPaletaColores(configuracion.paleta_colores);
                 aplicarTamanoTexto(configuracion.tamano_texto);
-                aplicarSubrayadoEnlaces(configuracion.configuracion_navegacion === 1);
             },
             error: function () {
                 alert('Error al guardar la configuración.');
@@ -103,12 +94,6 @@ $(document).ready(function () {
     $(document).on('change', '#fontSize', function () {
         const tamano = $(this).val();
         aplicarTamanoTexto(tamano);
-    });
-
-    // Aplicar el subrayado de enlaces en tiempo real
-    $(document).on('change', '#underlineLinks', function () {
-        const subrayado = $(this).is(':checked');
-        aplicarSubrayadoEnlaces(subrayado);
     });
 
     // Función para aplicar la paleta de colores
@@ -131,12 +116,4 @@ $(document).ready(function () {
         }
     }
 
-    // Función para aplicar subrayado a los enlaces
-    function aplicarSubrayadoEnlaces(subrayado) {
-        if (subrayado) {
-            $('a').css('text-decoration', 'underline');
-        } else {
-            $('a').css('text-decoration', 'none');
-        }
-    }
 });

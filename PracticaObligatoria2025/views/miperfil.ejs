@@ -33,9 +33,9 @@
                  <!--habria que poner la foto de perfil y si no tiene una generica guardada-->
                  <div class="col-md-3 justify-content-start">
                    <% if (misdatos[0].foto ===null) { %>
-                   <img src="/images/Iconos/imagenSinRostro.png" class="img-fluid rounded-start" id="miFoto" alt="Tu foto de perfil">
+                   <img src="/images/Iconos/imagenSinRostro.png" class="img-fluid rounded-start" id="miFoto" alt="Tu foto de perfil"  tabindex="0">
                    <% }else {%>
-                     <img src="data:image/png; base64, <%= ((new Buffer(misdatos[0].foto)).toString('base64')) %>" class="img-fluid rounded-start" id="miFoto" alt="Tu foto de perfil">
+                     <img src="data:image/png; base64, <%= ((new Buffer(misdatos[0].foto)).toString('base64')) %>" class="img-fluid rounded-start" id="miFoto" alt="Tu foto de perfil"  tabindex="0">
                    <%}%>
                    <span>Haga click en la imagen para cambiarla</span>
                  </div>

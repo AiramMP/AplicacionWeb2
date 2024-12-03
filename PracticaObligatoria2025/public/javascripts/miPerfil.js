@@ -1,7 +1,14 @@
 $(function(){
-    $("#miFoto").on('click',function(){
+    /*$("#miFoto").on('click',function(){
         $("#uploadModal").modal('show');
-    })
+    })*/
+
+    $("#miFoto").on('click keypress', function (event) {
+        if (event.type === 'click' || (event.type === 'keypress' && event.key === 'Enter')) {
+            $("#uploadModal").modal('show');
+        }
+    });
+    
 
     $("#botonsubmit").on('click',function(){
         var fileInput = $('#imageInput')[0];
