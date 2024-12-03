@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".btn-primary").click(function () {
+    $(".inscripcion").click(function () {
         const idEvento = $(this).data("id");
         console.log("ID del evento enviado:", idEvento); // Verifica que sea correcto
         $.ajax({
@@ -192,6 +192,16 @@ $(document).on('click', '.btn-historial', function () {
         }
     });
 });
+
+$(document).ready(function () {
+    $('#filtrosEventos').on('submit', function (event) {
+        event.preventDefault();
+
+        const filtros = $(this).serialize(); // Convierte los valores del formulario en un query string
+        window.location.href = `/usuarios/eventos?${filtros}`; // Redirige con los filtros aplicados
+    });
+});
+
 
 
 

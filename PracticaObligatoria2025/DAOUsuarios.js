@@ -32,6 +32,50 @@ class DAOUsuarios{
             }
         });
     }
+
+    cogerEventosConFiltros(filtros, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) return callback(err);
+    
+            let sql = `
+                SELECT id, titulo, descripcion, 
+                       DATE_FORMAT(fecha, '%W %d %M %Y') AS fecha, 
+                       TIME_FORMAT(hora, '%H:%i') AS hora, 
+                       ubicacion, capacidad_maxima, capacidad_restante, tipo, 
+                       foto
+                FROM eventos
+                WHERE 1=1
+            `;
+    
+            const params = [];
+    
+            if (filtros.fechaInicio) {
+                sql += " AND fecha >= ?";
+                params.push(filtros.fechaInicio);
+            }
+            if (filtros.tipo) {
+                sql += " AND tipo = ?";
+                params.push(filtros.tipo);
+            }
+            if (filtros.ubicacion) {
+                sql += " AND ubicacion LIKE ?";
+                params.push(`%${filtros.ubicacion}%`);
+            }
+            if (filtros.capacidad) {
+                sql += " AND capacidad_restante >= ?";
+                params.push(filtros.capacidad);
+            }
+    
+            sql += " ORDER BY fecha ASC";
+    
+            connection.query(sql, params, (err, datos) => {
+                connection.release();
+                if (err) return callback(err);
+                callback(null, datos);
+            });
+        });
+    }
+    
     
 
     cogerEventosCalendario(callback) {

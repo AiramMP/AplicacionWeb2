@@ -21,13 +21,64 @@
     <%- include('header'); %>
     <%- include('navUser'); %>
 
+
     <h1>Bienvenid@ <%=nombre%></h1>
-    <button type="button" class="btn btn-info" onclick="window.location.href='/eventos/calendario-vista'">
-        Ver Calendario
-    </button>
+
+    <div class="container mt-4">
+        <!-- Botón del calendario arriba -->
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <button type="button" class="btn btn-info w-25" onclick="window.location.href='/eventos/calendario-vista'">
+                    Calendario
+                </button>
+            </div>
+        </div>
     
-    
-    
+        <!-- Accordion para los filtros debajo -->
+        <div class="row text-center">
+            <div class="col-12">
+                <div class="accordion w-50 mx-auto" id="accordionFiltros">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFiltros">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFiltros" aria-expanded="false" aria-controls="collapseFiltros">
+                                Filtros
+                            </button>
+                        </h2>
+                        <div id="collapseFiltros" class="accordion-collapse collapse" aria-labelledby="headingFiltros" data-bs-parent="#accordionFiltros">
+                            <div class="accordion-body">
+                                <form id="filtrosEventos" class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                                        <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="tipo" class="form-label">Tipo de Evento</label>
+                                        <select class="form-select" id="tipo" name="tipo">
+                                            <option value="">Todos</option>
+                                            <option value="presencial">Presencial</option>
+                                            <option value="online">Online</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="ubicacion" class="form-label">Ubicación</label>
+                                        <input type="text" class="form-control" id="ubicacion" name="ubicacion" placeholder="Ej. Madrid">
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="capacidad" class="form-label">Capacidad Mínima</label>
+                                        <input type="number" class="form-control" id="capacidad" name="capacidad" min="1">
+                                    </div>
+                                    <div class="col-12 text-center mt-4">
+                                        <button type="submit" class="btn btn-primary btn-sm">Aplicar Filtros</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <% eventos.forEach(function(datos){ %>
         <div class="row mt-4">
@@ -36,18 +87,19 @@
                     <div class="card-body">
                         <div class="row d-flex">
                             <div class="col col-lg-4 col-md-4 col-sm-6 col-10 text-center mx-auto">
-                                <% if (datos.foto === null) { %>
+                                <% if (!datos.foto) { %>
                                     <img src="/images/Iconos/imagenEventoGenerica.png" alt="Imagen del Evento Genérica" class="img-fluid h-100">
                                 <% } else { %>
-                                    <img src="data:image/png;base64, <%= ((new Buffer(datos.foto)).toString('base64')) %>" alt="Foto Evento <%=datos.titulo%>" class="img-fluid h-100">
+                                    <img src="data:image/png;base64,<%= Buffer.from(datos.foto).toString('base64') %>" alt="Foto Evento <%= datos.titulo %>" class="img-fluid h-100">
                                 <% } %>
+                                
                             </div>
                             <div class="col col-lg-8 col-md-8 col-sm-6 cols-12 text-center">
                                 <h3 class="card-title mx-auto link" data-id="<%=datos.id%>"> <%=datos.titulo%></h3>
                                 <p class="card-text mx"><%=datos.descripcion%> </p>
                                 <p class="card-text mx">El evento es el día <%=datos.fecha%> a las <%=datos.hora%> con capacidad máxima de <%= datos.capacidad_maxima %></p>
                                 <p class="card-text mx">Quedan <%= datos.capacidad_restante %> plazas disponibles</p>
-                                <button type="button" class="link btn btn-primary w-50" data-id="<%= datos.id %>">Inscribirse</button>
+                                <button type="button" class="link btn btn-primary inscripcion w-50" data-id="<%= datos.id %>">Inscribirse</button>
                             </div>
                         </div>
                     </div>
