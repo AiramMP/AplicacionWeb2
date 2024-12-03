@@ -450,42 +450,57 @@ router.post('/rechazarListaEspera/:id', (req, res) => {
     });
 });
 
-router.get('/calendario', (req, res) => {
-    const start = req.query.start;
-    const end = req.query.end;
-
-    if (start && end) {
-        // Filtrar eventos por rango de fechas
-        req.daoEventos.obtenerEventosPorRango(start, end, (err, eventos) => {
-            if (err) {
-                res.status(500).send('Error al cargar los eventos');
-            } else {
-                const eventosCalendario = eventos.map(evento => ({
-                    id: evento.id,
-                    title: evento.titulo,
-                    start: `${evento.fecha}T${evento.hora}`,
-                    description: evento.descripcion,
-                }));
-                res.json(eventosCalendario);
-            }
-        });
-    } else {
-        // Devolver todos los eventos
-        req.daoEventos.cogerEventosCalendario((err, eventos) => {
-            if (err) {
-                res.status(500).send('Error al cargar los eventos');
-            } else {
-                const eventosCalendario = eventos.map(evento => ({
-                    id: evento.id,
-                    title: evento.titulo,
-                    start: `${evento.fecha}T${evento.hora}`,
-                    description: evento.descripcion,
-                }));
-                res.json(eventosCalendario);
-            }
-        });
-    }
+router.get('/calendario-vista', (req, res) => {
+    res.render('calendarioEventos', {
+        configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
+        foto: req.session.foto,
+        nombre: req.session.nombre,
+        usuario: req.session.usuario,
+        rol: req.session.rol,
+    });
 });
+
+
+router.get('/calendario', (req, res) => {
+    req.daoEventos.obtenerEventosValidos((err, eventos) => {
+        if (err) {
+            console.error("Error al cargar los eventos válidos:", err);
+            res.status(500).json({ error: 'Error al cargar los eventos.' });
+        } else {
+            const eventosCalendario = eventos.map(evento => {
+                try {
+                    // Asegúrate de que los formatos sean válidos antes de convertir
+                    const fechaISO = `${evento.fecha}T${evento.hora}`;
+                    const fechaEvento = new Date(fechaISO);
+
+                    if (isNaN(fechaEvento.getTime())) {
+                        throw new Error(`Fecha u hora inválida: ${fechaISO}`);
+                    }
+
+                    // Ajustar la fecha al formato local
+                    const fechaLocal = new Date(fechaEvento.getTime() - fechaEvento.getTimezoneOffset() * 60000);
+
+                    return {
+                        id: evento.id,
+                        title: evento.titulo,
+                        start: fechaLocal.toISOString().slice(0, 19), // Formato ISO ajustado
+                        description: evento.descripcion,
+                    };
+                } catch (error) {
+                    console.error(`Error al procesar el evento ID ${evento.id}: ${error.message}`);
+                    return null; // Filtrar eventos inválidos
+                }
+            }).filter(evento => evento !== null); // Filtrar nulos
+
+            res.json(eventosCalendario);
+        }
+    });
+});
+
+
+
+
+
 
 router.get('/historialAsistentes/:id', (req, res) => {
     const eventoId = req.params.id;

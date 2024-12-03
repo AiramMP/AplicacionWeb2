@@ -96,46 +96,44 @@ $(document).on('click', '.aceptar-lista-espera', function () {
 
 
 $(document).ready(function () {
-    $('#btnCalendario').on('click', function () {
-        $('#loadingSpinner').show(); // Mostrar el spinner
-        
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'es',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: '/eventos/calendario',
-            eventClick: function (info) {
-                if (confirm(`¿Quieres inscribirte al evento "${info.event.title}"?`)) {
-                    $.ajax({
-                        url: `/eventos/inscribirse`,
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({ id: info.event.id }),
-                        success: function () {
-                            alert('Inscripción realizada con éxito');
-                            calendar.refetchEvents();
-                        },
-                        error: function () {
-                            alert('Error al inscribirse al evento');
-                        }
-                    });
-                }
-            },
-            loading: function (isLoading) {
-                if (!isLoading) {
-                    $('#loadingSpinner').hide(); // Ocultar el spinner cuando termine de cargar
-                }
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'es',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: '/eventos/calendario',
+        eventDidMount: function (info) {
+            console.log('Evento cargado:', info.event);
+        },
+        eventClick: function (info) {
+            console.log('Evento clickeado:', info.event);
+            if (confirm(`¿Quieres inscribirte al evento "${info.event.title}"?`)) {
+                $.ajax({
+                    url: `/eventos/inscribirse`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ id: info.event.id }),
+                    success: function () {
+                        alert('Inscripción realizada con éxito');
+                        calendar.refetchEvents(); // Recargar eventos
+                    },
+                    error: function () {
+                        alert('Error al inscribirse al evento');
+                    }
+                });
             }
-        });
-        calendar.render(); // Renderizar el calendario
+        }
     });
     
+
+    calendar.render(); // Renderizar el calendario
 });
+
+
 
 $(document).on('click', '.btn-historial', function () {
     const eventoId = $(this).data('id');
