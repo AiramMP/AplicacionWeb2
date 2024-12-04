@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-12-2024 a las 19:40:37
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 04-12-2024 a las 22:36:06
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,6 +34,13 @@ CREATE TABLE `configuracionaccesibilidad` (
   `tamano_texto` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `configuracionaccesibilidad`
+--
+
+INSERT INTO `configuracionaccesibilidad` (`id`, `usuario_id`, `paleta_colores`, `tamano_texto`) VALUES
+(3, 10, 'alto-contraste', 'grande');
+
 -- --------------------------------------------------------
 
 --
@@ -55,25 +62,26 @@ CREATE TABLE `correos` (
 --
 
 INSERT INTO `correos` (`id`, `CorreoEmisor`, `CorreoReceptor`, `Asunto`, `Mensaje`, `Fecha`, `Visto`) VALUES
-(2, '2', '9', 'Nueva inscripción a tu evento', 'El usuario a@ucm.es se ha inscrito en tu evento con ID 2.', '2024-11-30 20:53:16', 1),
-(3, '2', '9', 'Un usuario se ha desapuntado', 'El usuario a@ucm.es se ha desapuntado de tu evento con ID 2.', '2024-11-30 22:12:34', 0),
-(4, '2', '1', 'Nueva inscripción a tu evento', 'El usuario a@ucm.es se ha inscrito en tu evento con ID 1.', '2024-11-30 22:12:41', 0),
-(5, '2', '9', 'Nueva inscripción a tu evento', 'El usuario a@ucm.es se ha inscrito en tu evento con ID 2.', '2024-11-30 22:12:43', 0),
-(6, '6', '1', 'Nueva inscripción a tu evento', 'El usuario b@ucm.es se ha inscrito en tu evento con ID 1.', '2024-11-30 22:12:53', 0),
-(7, '6', '9', 'Nueva inscripción a tu evento', 'El usuario b@ucm.es se ha inscrito en tu evento con ID 2.', '2024-11-30 22:12:55', 0),
-(8, '7', '9', 'Nueva inscripción a tu evento', 'El usuario c@ucm.es se ha inscrito en tu evento con ID 2.', '2024-11-30 22:13:02', 1),
-(9, 'Sistema', '7', 'Has sido promovido al estado inscrito', 'Has sido promovido desde la lista de espera al estado inscrito en el evento: 2.', '2024-11-30 22:13:17', 0),
-(10, 'Sistema', '9', 'Un usuario ha sido promovido', 'Un usuario ha sido promovido desde la lista de espera al estado inscrito en tu evento: 2.', '2024-11-30 22:13:17', 0),
-(11, '7', '9', 'Nueva inscripción a tu evento', 'El usuario c@ucm.es se ha inscrito en tu evento con ID 2.', '2024-12-01 15:04:51', 1),
-(12, '5', '9', 'Nueva inscripción a tu evento', 'El usuario d@ucm.es se ha inscrito en tu evento con ID 2.', '2024-12-01 15:06:19', 0),
-(13, 'Sistema', '5', 'Has sido promovido al estado inscrito', 'Has sido promovido desde la lista de espera al estado inscrito en el evento: 2.', '2024-12-01 15:06:38', 0),
-(14, 'Sistema', '9', 'Un usuario ha sido promovido', 'Un usuario ha sido promovido desde la lista de espera al estado inscrito en tu evento: 2.', '2024-12-01 15:06:38', 0),
-(15, '5', '9', 'Nueva inscripción a tu evento', 'El usuario d@ucm.es se ha inscrito en tu evento con ID 2.', '2024-12-01 15:14:54', 0),
-(16, 'Sistema', '5', 'Inscripción rechazada', 'Lamentamos informarte que no has sido aceptado en el evento: 2.', '2024-12-01 15:28:30', 0),
-(17, '8', '9', 'Nueva inscripción a tu evento', 'El usuario e@ucm.es se ha inscrito en tu evento con ID 2.', '2024-12-01 15:31:03', 0),
-(18, '2', '9', 'Un usuario se ha desapuntado', 'El usuario a@ucm.es se ha desapuntado de tu evento con ID 2.', '2024-12-01 15:31:14', 0),
-(19, 'Sistema', '8', 'Has sido promovido al estado inscrito', 'Has sido promovido desde la lista de espera al estado inscrito en el evento: 2.', '2024-12-01 15:31:28', 0),
-(20, 'Sistema', '9', 'Un usuario ha sido promovido', 'Un usuario ha sido promovido desde la lista de espera al estado inscrito en tu evento: 2.', '2024-12-01 15:31:28', 0);
+(21, 'Sistema', '10', 'Evento creado exitosamente', 'Tu evento \"Charla sobre Aplicaciones Web\" ha sido creado con éxito.', '2024-12-04 19:28:28', 0),
+(22, '11', '10', 'Nueva inscripción a tu evento', 'El usuario Mike@ucm.es se ha inscrito en tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:41:48', 0),
+(23, 'Sistema', '11', 'Inscripción exitosa al evento', 'Te has inscrito exitosamente al evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:41:48', 0),
+(24, 'Sistema', '11', 'Te has desapuntado de un evento', 'Has cancelado tu inscripción al evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:41:54', 0),
+(25, '11', '10', 'Un usuario se ha desapuntado', 'El usuario Mike@ucm.es se ha desapuntado de tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:41:54', 0),
+(26, 'Sistema', '11', 'Inscripción exitosa al evento', 'Te has inscrito exitosamente al evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:42:00', 0),
+(27, '11', '10', 'Nueva inscripción a tu evento', 'El usuario Mike@ucm.es se ha inscrito en tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:42:00', 0),
+(28, 'Sistema', '10', 'Añadido a la lista de espera', 'Has sido añadido a la lista de espera para el evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:44:48', 0),
+(29, '10', '10', 'Nueva inscripción a tu evento', 'El usuario airammar@ucm.es se ha inscrito en tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:44:48', 0),
+(30, 'Sistema', '10', 'Inscripción rechazada', 'Lamentamos informarte que no has sido aceptado en el evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:45:15', 0),
+(31, 'Sistema', '10', 'Añadido a la lista de espera', 'Has sido añadido a la lista de espera para el evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:45:20', 0),
+(32, '10', '10', 'Nueva inscripción a tu evento', 'El usuario airammar@ucm.es se ha inscrito en tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 19:45:20', 0),
+(33, 'Sistema', '10', 'Has sido promovido al estado inscrito', 'Has sido promovido desde la lista de espera al estado inscrito en el evento: Charla sobre Aplicaciones Web.', '2024-12-04 20:00:49', 0),
+(34, 'Sistema', '10', 'Un usuario ha sido promovido', 'Un usuario ha sido promovido desde la lista de espera al estado inscrito en tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 20:00:49', 0),
+(35, '10', '10', 'Un usuario se ha desapuntado', 'El usuario airammar@ucm.es se ha desapuntado de tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 21:23:23', 0),
+(36, 'Sistema', '10', 'Te has desapuntado de un evento', 'Has cancelado tu inscripción al evento: Charla sobre Aplicaciones Web.', '2024-12-04 21:23:23', 0),
+(37, 'Sistema', '10', 'Inscripción exitosa al evento', 'Te has inscrito exitosamente al evento: Charla sobre Aplicaciones Web.', '2024-12-04 21:23:40', 0),
+(38, '10', '10', 'Nueva inscripción a tu evento', 'El usuario airammar@ucm.es se ha inscrito en tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 21:23:40', 0),
+(39, 'Sistema', '10', 'Te has desapuntado de un evento', 'Has cancelado tu inscripción al evento: Charla sobre Aplicaciones Web.', '2024-12-04 21:23:52', 0),
+(40, '10', '10', 'Un usuario se ha desapuntado', 'El usuario airammar@ucm.es se ha desapuntado de tu evento: Charla sobre Aplicaciones Web.', '2024-12-04 21:23:52', 0);
 
 -- --------------------------------------------------------
 
@@ -99,7 +107,8 @@ CREATE TABLE `eventos` (
 -- Volcado de datos para la tabla `eventos`
 --
 
-
+INSERT INTO `eventos` (`id`, `titulo`, `descripcion`, `fecha`, `hora`, `ubicacion`, `capacidad_maxima`, `capacidad_restante`, `organizador_id`, `foto`, `tipo`) VALUES
+(3, 'Charla sobre Aplicaciones Web', 'Charla sobre Aplicaciones Web por un experto con más de 20 años de experiencia.', '2024-12-11', '10:30:00', 'Aula 16 Facultad de Informática', 24, 23, 10, NULL, 'online');
 
 -- --------------------------------------------------------
 
@@ -123,7 +132,8 @@ INSERT INTO `inscripciones` (`id`, `usuario_id`, `evento_id`, `estado_inscripcio
 (30, 2, 1, 'inscrito', '2024-11-30 23:12:41'),
 (32, 6, 1, 'inscrito', '2024-11-30 23:12:53'),
 (33, 6, 2, 'inscrito', '2024-11-30 23:12:55'),
-(37, 8, 2, 'inscrito', '2024-12-01 16:31:03');
+(37, 8, 2, 'inscrito', '2024-12-01 16:31:03'),
+(39, 11, 3, 'inscrito', '2024-12-04 20:42:00');
 
 -- --------------------------------------------------------
 
@@ -136,13 +146,6 @@ CREATE TABLE `sessions` (
   `expires` int(11) UNSIGNED NOT NULL,
   `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `sessions`
---
-
-INSERT INTO `sessions` (`session_id`, `expires`, `data`) VALUES
-('NyRZhf7Z_1Kjaiag_70wKDfCyWlPGOT4', 1733070919, '{\"cookie\":{\"originalMaxAge\":3600000,\"expires\":\"2024-12-01T16:34:41.014Z\",\"httpOnly\":true,\"path\":\"/\"},\"userId\":9,\"usuario\":\"admin@ucm.es\",\"foto\":null,\"nombre\":\"admin\",\"rol\":\"organizador\"}');
 
 -- --------------------------------------------------------
 
@@ -167,13 +170,8 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `correo`, `telefono`, `facultad`, `rol`, `configuraciones_accesibilidad`, `foto`, `password`) VALUES
-(1, 'm', 'm1@ucm.es', '123456789', 'Bellas Artes', 'organizador', NULL, NULL, '123'),
-(2, 'a', 'a@ucm.es', '123456789', 'Informatica', 'asistente', NULL, NULL, '123'),
-(5, 'd', 'd@ucm.es', '123456789', 'Bellas Artes', 'asistente', NULL, NULL, '123'),
-(6, 'b', 'b@ucm.es', '123456789', 'Enfermeria, Fisioterapia y Podologia', 'asistente', NULL, NULL, '123'),
-(7, 'c', 'c@ucm.es', '123456789', 'Optica y Optometria', 'asistente', NULL, NULL, '123'),
-(8, 'e', 'e@ucm.es', '123456798', 'Medicina', 'asistente', NULL, NULL, '123'),
-(9, 'admin', 'admin@ucm.es', '123456789', 'Filosofia', 'organizador', NULL, NULL, '123');
+(10, 'Airam', 'airammar@ucm.es', '987654321', 'Informatica', 'organizador', NULL, NULL, '1234'),
+(11, 'Mike', 'Mike@ucm.es', '987654321', 'Informatica', 'asistente', NULL, NULL, '1234');
 
 --
 -- Índices para tablas volcadas
@@ -228,31 +226,31 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `configuracionaccesibilidad`
 --
 ALTER TABLE `configuracionaccesibilidad`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `correos`
 --
 ALTER TABLE `correos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT de la tabla `eventos`
 --
 ALTER TABLE `eventos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `inscripciones`
 --
 ALTER TABLE `inscripciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Restricciones para tablas volcadas
@@ -269,13 +267,6 @@ ALTER TABLE `configuracionaccesibilidad`
 --
 ALTER TABLE `eventos`
   ADD CONSTRAINT `eventos_ibfk_1` FOREIGN KEY (`organizador_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `inscripciones`
---
-ALTER TABLE `inscripciones`
-  ADD CONSTRAINT `inscripciones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `inscripciones_ibfk_2` FOREIGN KEY (`evento_id`) REFERENCES `eventos` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
