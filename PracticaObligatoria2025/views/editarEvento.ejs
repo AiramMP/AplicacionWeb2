@@ -52,7 +52,7 @@
             <div class="mb-3">
                 <label for="capacidad_maxima" class="form-label">Capacidad Máxima</label>
                 <input type="number" id="capacidad_maxima" name="capacidad_maxima" class="form-control" value="<%= evento.capacidad_maxima %>" required>
-                <small class="text-muted">Nota: Solo puedes reducir la capacidad máxima hasta <%= evento.capacidad_maxima - evento.capacidad_restante %>.</small>
+                <small>Nota: Solo puedes reducir la capacidad máxima hasta <%= evento.capacidad_maxima - evento.capacidad_restante %>.</small>
             </div>
             <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo de Evento</label>

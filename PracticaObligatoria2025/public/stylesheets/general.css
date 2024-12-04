@@ -17,8 +17,8 @@ body {
 
 
 header, .navbar {
-  max-width: 100% !important; /* Asegura que no exceda el ancho del viewport */
-  overflow-x: hidden !important; /* Oculta cualquier contenido que pueda desbordarse */
+  max-width: 100% !important;
+  overflow-x: hidden !important; 
 }
 
 .navbar-nav {
@@ -26,7 +26,7 @@ header, .navbar {
 }
 
 .navbar-nav li:first-child {
-  margin-left: 30px !important; /* Ajusta el valor según sea necesario */
+  margin-left: 30px !important; 
 }
 
 
@@ -140,10 +140,10 @@ h1 {
 }
 
 .extra-margin-bottom {
-  margin-bottom: 200px; /* Ajusta el valor según tus necesidades */
+  margin-bottom: 200px;
 }
 
-/* Paleta de colores */
+
 .alto-contraste {
   background-color: #000;
   color: #fff;
@@ -152,17 +152,17 @@ h1 {
 body.alto-contraste .modal-content {
   background-color: #2c2c2c; /* Fondo oscuro */
   color: #ffffff; /* Texto claro */
-  border: 1px solid #444444; /* Borde para dar contraste */
+  border: 1px solid #444444; 
 }
 
 body.alto-contraste .modal-header, 
 body.alto-contraste .modal-footer {
-  background-color: #3b3b3b; /* Fondo un poco más claro */
-  border-bottom: 1px solid #555555; /* Borde para separar */
+  background-color: #3b3b3b;
+  border-bottom: 1px solid #555555; 
 }
 
 body.alto-contraste .btn-close {
-  filter: invert(1); /* Invertir color del botón de cerrar */
+  filter: invert(1); 
 }
 
 body.alto-contraste .btn-primary {
@@ -178,14 +178,13 @@ body.alto-contraste .btn-secondary {
 
 .alto-contraste .card {
   background-color: #1d2124; /* Fondo más oscuro para accesibilidad */
-  color: #ffffff; /* Texto blanco */
+  color: #ffffff; 
 }
 
 .alto-contraste .card img {
-  border-color: #ffffff; /* Borde blanco */
+  border-color: #ffffff; 
 }
 
-/* Tamaño de texto */
 .texto-pequeno {
   font-size: 12px;
 }
@@ -200,41 +199,41 @@ body.alto-contraste .btn-secondary {
 
 /* Modo Alto Contraste */
 .alto-contraste h1 {
-  color: #ffffff; /* Texto blanco */
+  color: #ffffff; 
 }
 
 .alto-contraste .header {
-  background-color: #1d2124; /* Fondo oscuro */
-  color: #ffffff; /* Texto blanco */
-  border-bottom: 1px solid #444; /* Borde oscuro */
+  background-color: #1d2124; 
+  color: #ffffff; 
+  border-bottom: 1px solid #444; 
 }
 
 .alto-contraste .navbar {
-  background-color: #1d2124 !important; /* Fondo oscuro para la barra de navegación */
-  color: #ffffff; /* Texto blanco */
+  background-color: #1d2124 !important; 
+  color: #ffffff; 
 }
 
 .alto-contraste .navbar-nav .nav-link {
-  color: #ffffff; /* Enlaces blancos */
+  color: #ffffff; 
 }
 
 .alto-contraste .navbar-nav .nav-link:hover {
-  color: #f8f9fa; /* Color más claro al pasar el cursor */
+  color: #f8f9fa; 
 }
 
 .alto-contraste .btn {
-  background-color: #444; /* Fondo de botones */
-  color: #ffffff; /* Texto blanco */
-  border-color: #555; /* Borde oscuro */
+  background-color: #444; 
+  color: #ffffff; 
+  border-color: #555; 
 }
 
 .alto-contraste .btn:hover {
-  background-color: #555; /* Fondo más claro al pasar el cursor */
-  border-color: #666; /* Borde más claro */
+  background-color: #555; 
+  border-color: #666;
 }
 
 button:focus {
-  outline: 2px solid #007bff; /* Resalta el botón cuando tiene foco */
+  outline: 2px solid #007bff;
 }
 
 .btn:focus{
