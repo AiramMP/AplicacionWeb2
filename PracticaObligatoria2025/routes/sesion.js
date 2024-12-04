@@ -2,12 +2,11 @@ var express = require('express');
 var router = express.Router();
 const DAOSesiones = require('../DAOSesiones');
 
-/* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('pagInicio', { title: 'Portal de Gestión de Eventos Universitarios' });
 });
 
-router.get('/existeUsuario',function(request,response){//Petición AJAX
+router.get('/existeUsuario',function(request,response){
   const dao=request.daoSesiones;
 
   dao.ExisteUsuario(request.query.correos,function(err,data){
@@ -31,13 +30,13 @@ router.post('/comprobarpassword', function (req, res) {
           res.status(400).send("Credenciales inválidas");
       } else {
           const user = data[0];
-          req.session.userId = user.id; // Guardar el ID del usuario en la sesión
+          req.session.userId = user.id;
           req.session.usuario = user.correo;
           req.session.foto = user.foto;
           req.session.nombre = user.nombre;
           req.session.rol = user.rol;
 
-          res.json(user); // Responder al cliente con los datos del usuario
+          res.json(user);
       }
   });
 });
@@ -64,17 +63,12 @@ router.post('/signin', function(request, response) {
           message: "Error al registrar usuario"
         });
       } else {
-        // Configurar la sesión con el ID del usuario
         request.session.usuario = request.body.correo;
         request.session.nombre = request.body.nombre;
         request.session.rol = request.body.rol;
-        request.session.userId = userId; // Guarda el ID del usuario en la sesión
+        request.session.userId = userId;
         request.session.foto = null;
-        /*if (!request.body.foto) {
-          request.session.foto = "/images/Iconos/imagenSinRostro.png"; // Ruta a la foto por defecto
-        }*/
 
-        // Guardar la sesión
         request.session.save((err) => {
           if (err) {
             console.error("Error al guardar la sesión:", err);
@@ -91,21 +85,16 @@ router.post('/signin', function(request, response) {
   );
 });
 
-
 router.post('/login', function(request, response) {
-
   request.session.usuario = request.body.correo;
 
   request.session.save((err) => {
       if (err) {
-          console.error("Error al guardar la sesión:", err);
-      } else {
-          console.log("Sesión guardada correctamente:", request.session);
+          return response.status(500).send("Error al guardar la sesión.");
       }
       response.redirect('/usuarios/');
   });
 });
-
 
 router.get('/logout',function(request,response){
   request.session.destroy();

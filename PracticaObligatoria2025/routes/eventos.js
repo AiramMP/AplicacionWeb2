@@ -32,6 +32,7 @@ router.get("/", function (req, res) {
     });
 });
 
+
 router.post('/inscribirse', (req, res) => {
     const daoEventos = req.daoEventos;
     const daoCorreos = req.daoCorreos;
@@ -111,7 +112,6 @@ router.post('/inscribirse', (req, res) => {
 });
 
 
-
 router.post("/cancelarEvento", function (req, res) {
     const daoEventos = req.daoEventos;
     const daoCorreos = req.daoCorreos;
@@ -141,7 +141,6 @@ router.post("/cancelarEvento", function (req, res) {
 });
 
 
-
 router.post('/desapuntarse', (req, res) => {
     const daoEventos = req.daoEventos;
     const daoCorreos = req.daoCorreos;
@@ -153,8 +152,6 @@ router.post('/desapuntarse', (req, res) => {
         console.error("Datos insuficientes para desapuntarse:", { usuarioId, idEvento });
         return res.status(400).json({ success: false, message: "Faltan datos necesarios para desapuntarse." });
     }
-
-    console.log("Desapuntarse de evento:", { usuarioId, idEvento });
 
     daoEventos.obtenerDatosEvento(idEvento, (err, eventoDatos) => {
         if (err || !eventoDatos) {
@@ -169,8 +166,6 @@ router.post('/desapuntarse', (req, res) => {
                 console.error("Error al desapuntarse del evento:", err);
                 return res.status(500).json({ success: false, message: "Error al desapuntarse del evento." });
             }
-
-            console.log("Usuario desapuntado con éxito:", usuarioId);
 
             // Notificar al organizador
             daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
@@ -191,41 +186,11 @@ router.post('/desapuntarse', (req, res) => {
                 if (err) console.error("Error al enviar notificación al usuario:", err);
             });
 
-            console.log("castaña");
             res.json({success: true, message: "Te has desapuntado del evento exitosamente."});
         });
     });
 });
 
-
-
-router.get("/misInscripciones", function (req, res) {
-    const dao = req.daoEventos;
-    const usuarioId = req.session.userId;
-
-    dao.obtenerInscripciones(usuarioId, function (err, inscripciones) {
-        if (err) {
-            res.status(500);
-            res.render("error", {
-                foto: req.session.foto,
-                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
-                nombre: req.session.nombre,
-                usuario: req.session.usuario,
-                rol: req.session.rol,
-                error: "No se pudo cargar las inscripciones del usuario",
-            });
-        } else {
-            res.render("misInscripciones", {
-                inscripciones: inscripciones,
-                configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
-                foto: req.session.foto,
-                nombre: req.session.nombre,
-                usuario: req.session.usuario,
-                rol: req.session.rol,
-            });
-        }
-    });
-});
 
 router.get('/crearEvento', function (req, res) {
     res.render('crearEvento', {
@@ -238,47 +203,18 @@ router.get('/crearEvento', function (req, res) {
     });
 });
 
-/*router.post('/guardarEvento', upload.single('foto'), function (req, res) {
-    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
-
-    if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima) {
-        return res.status(400).send('Todos los campos son obligatorios.');
-    }
-
-    const organizador_id = req.session.userId;
-    const foto = req.file ? req.file.buffer : null;
-
-    req.daoEventos.crearEvento(
-        titulo,
-        descripcion,
-        fecha,
-        hora,
-        ubicacion,
-        capacidad_maxima,
-        organizador_id,
-        foto,
-        function (err) {
-            if (err) {
-                console.error("Error al crear el evento:", err);
-                res.status(500).send('Error al crear el evento');
-            } else {
-                res.redirect('/usuarios/');
-            }
-        }
-    );
-});*/
 
 router.post('/guardarEvento', upload.single('foto'), (req, res) => {
-    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
+    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, tipo} = req.body;
     const organizadorId = req.session.userId;
     const foto = req.file ? req.file.buffer : null;
 
-    if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima) {
+    if (!titulo || !descripcion || !fecha || !hora || !ubicacion || !capacidad_maxima || !tipo) {
         res.status(400).send('Todos los campos son obligatorios.');
         return;
     }
 
-    req.daoEventos.crearEvento(titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, organizadorId, foto, (err, eventoId) => {
+    req.daoEventos.crearEvento(titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, organizadorId, foto, tipo, (err, eventoId) => {
         if (err) {
             res.status(500).send('Error al crear el evento.');
         } else {
@@ -352,26 +288,15 @@ router.get('/editar/:id', (req, res) => {
 });
 
 
-
 router.post('/editar/:id', upload.single('foto'), (req, res) => {
     const eventoId = req.params.id;
-    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima } = req.body;
+    const { titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima, tipo} = req.body;
     const nuevaFoto = req.file ? req.file.buffer : null;
 
-    // Llamamos a la función para editar el evento
-    req.daoEventos.editarEvento(eventoId, {
-        titulo,
-        descripcion,
-        fecha,
-        hora,
-        ubicacion,
-        capacidad_maxima: parseInt(capacidad_maxima, 10), // Convertir a número
-        foto: nuevaFoto
-    }, (err, mensaje) => {
+    req.daoEventos.editarEvento(eventoId, {titulo, descripcion, fecha, hora, ubicacion, capacidad_maxima: parseInt(capacidad_maxima, 10), tipo, foto: nuevaFoto}, (err, mensaje) => {
         if (err) {
             console.error("Error al editar el evento:", err.message);
 
-            // Si ocurre un error, obtenemos los datos del evento para rellenar el formulario nuevamente
             req.daoEventos.obtenerEvento(eventoId, (errEvento, evento) => {
                 if (errEvento) {
                     res.status(500).send("Error interno del servidor.");
@@ -379,8 +304,9 @@ router.post('/editar/:id', upload.single('foto'), (req, res) => {
                     res.render('editarEvento', {
                         evento: {
                             ...evento,
-                            fecha: evento.fecha.toISOString().split('T')[0], // Formato para input date
-                            hora: evento.hora.slice(0, 5) // Formato para input time
+                            fecha: evento.fecha.toISOString().split('T')[0],
+                            hora: evento.hora.slice(0, 5),
+                            tipo: evento.tipo
                         },
                         error: err.message,
                         configuracionAccesibilidad: req.session.configuracionAccesibilidad || {},
@@ -494,9 +420,6 @@ router.post('/aceptarListaEspera/:id', (req, res) => {
 });
 
 
-
-
-
 router.post('/rechazarListaEspera/:id', (req, res) => {
     const inscripcionId = req.params.id;
     const daoEventos = req.daoEventos;
@@ -584,10 +507,6 @@ router.get('/calendario', (req, res) => {
 });
 
 
-
-
-
-
 router.get('/historialAsistentes/:id', (req, res) => {
     const eventoId = req.params.id;
     const daoEventos = req.daoEventos;
@@ -609,15 +528,6 @@ router.get('/historialAsistentes/:id', (req, res) => {
         }
     });
 });
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router;

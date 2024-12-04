@@ -5,7 +5,6 @@ const router = express.Router();
 router.get('/misnotificaciones', function (req, res) {
     const dao = req.daoCorreos;
     const usuarioId = req.session.userId;
-    console.log(usuarioId);
     
     if (!usuarioId) {
         return res.status(400).render('error', {

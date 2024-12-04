@@ -144,26 +144,33 @@ class DAOUsuarios{
     }
 
     misIncripciones(usuario, callback) {
-        this.pool.getConnection(function (err, connection) {
+        this.pool.getConnection((err, connection) => {
             if (err) {
-                callback(err, null);
-            } else {
-                const sql = `SELECT e.id AS id_evento, e.titulo, e.descripcion, e.fecha,
-                        e.hora, e.ubicacion, e.capacidad_maxima, e.capacidad_restante, e.foto, i.estado_inscripcion
-                        FROM Inscripciones i
-                        JOIN Eventos e ON i.evento_id = e.id
-                        WHERE i.usuario_id = (SELECT id FROM Usuarios WHERE correo = ?)`;
-                connection.query(sql, [usuario], function (err, datos) {
-                    connection.release();
-                    if (err) {
-                        callback(err, null);
-                    } else {
-                        callback(null, datos);
-                    }
-                });
+                return callback(err, null);
             }
+            console.log("Usuario ID recibido:", usuario);
+
+            const sql = `
+                SELECT e.id, e.titulo, e.descripcion, 
+                       DATE_FORMAT(e.fecha, '%a %b %d %Y') AS fecha, 
+                       TIME_FORMAT(e.hora, '%H:%i') AS hora, 
+                       e.ubicacion, e.capacidad_maxima, e.capacidad_restante, 
+                       i.estado_inscripcion
+                FROM inscripciones i
+                JOIN eventos e ON i.evento_id = e.id
+                WHERE i.usuario_id = ?
+            `;
+    
+            connection.query(sql, [usuario], (queryErr, inscripciones) => {
+                connection.release();
+                console.log("Estan pasando cosas:", inscripciones);
+                if (queryErr) {
+                    return callback(queryErr, null);
+                }
+                callback(null, inscripciones);
+            });
         });
-    }
+    }    
     
 }
 

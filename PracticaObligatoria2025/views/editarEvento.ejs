@@ -55,6 +55,13 @@
                 <small class="text-muted">Nota: Solo puedes reducir la capacidad máxima hasta <%= evento.capacidad_maxima - evento.capacidad_restante %>.</small>
             </div>
             <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo de Evento</label>
+                <select id="tipo" name="tipo" class="form-select" required>
+                    <option value="presencial" <%= evento.tipo === 'presencial' ? 'selected' : '' %>>Presencial</option>
+                    <option value="online" <%= evento.tipo === 'online' ? 'selected' : '' %>>Online</option>
+                </select>
+            </div>
+            <div class="mb-3">
                 <label for="foto" class="form-label">Foto del Evento</label>
                 <input type="file" id="foto" name="foto" class="form-control">
             </div>
@@ -62,6 +69,7 @@
                 <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </div>
         </form>
+        
     </div>
     <%- include('footer'); %>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

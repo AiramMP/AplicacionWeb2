@@ -80,7 +80,8 @@ router.post('/cambiarFoto', multerFactory.single('foto'), function(request, resp
 
 router.get('/misInscripciones', function (request, response) {
     const dao = request.daoUsuarios;
-    dao.misIncripciones(request.session.usuario, function (err, datos) {
+    console.log(request.session);
+    dao.misIncripciones(request.session.userId, function (err, datos) {
         if (err) {
             response.status(500);
             response.render('error', {

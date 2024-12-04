@@ -96,20 +96,20 @@ app.use((req, res, next) => {
       normalizedIP = clientIP.split('::ffff:')[1];
   }
 
-  console.log(`IP detectada: ${normalizedIP}`);
+  //console.log(`IP detectada: ${normalizedIP}`);
 
   if (blackListIPs.includes(normalizedIP)) {
-      console.log(`Acceso denegado para la IP: ${normalizedIP}`);
+      //console.log(`Acceso denegado para la IP: ${normalizedIP}`);
       return res.status(403).send('Acceso denegado: su dirección IP no está permitida.');
   }
 
   next();
 });
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   console.log("Contenido de la sesión:", req.session);
   next();
-});
+});*/
 
 var sesionRouter = require('./routes/sesion');
 var usuariosRouter = require('./routes/usuarios');

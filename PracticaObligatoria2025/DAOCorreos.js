@@ -27,8 +27,6 @@ class DAOCorreos {
     
                 connection.query(sql, [usuarioId], function (err, resultados) {
                     connection.release();
-                    console.log("Receptor ID:", usuarioId);
-                    console.log("Resultados de correos:", resultados);
     
                     if (err) {
                         callback(err, null);

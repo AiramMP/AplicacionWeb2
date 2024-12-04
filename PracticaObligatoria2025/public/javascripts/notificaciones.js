@@ -17,7 +17,6 @@ $(document).on('click', '.list-group-item', function () {
                 url: `/correos/marcarLeido/${correoId}`,
                 method: 'POST',
                 success: function () {
-                    console.log(`Correo ${correoId} marcado como leído.`);
                     // Actualizar la vista
                     $(`[data-id=${correoId}]`)
                         .removeClass('list-group-item-warning')

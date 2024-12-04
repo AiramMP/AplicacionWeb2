@@ -47,7 +47,7 @@
                         <div class="card-body">
                             <div class="row d-flex">
                                 <div class="col col-lg-4 col-md-4 col-sm-6 col-10 text-center mx-auto">
-                                    <% if (datos.foto === null) { %>
+                                    <% if (!datos.foto) { %>
                                         <img src="/images/Iconos/imagenEventoGenerica.png" 
                                              alt="Imagen genérica del evento <%= datos.titulo %>" 
                                              class="img-fluid" id="imgPorDefecto">
@@ -55,7 +55,7 @@
                                         <img src="data:image/png;base64,<%= ((new Buffer(datos.foto)).toString('base64')) %>" 
                                              alt="Foto Evento <%= datos.titulo %>" 
                                              class="img-fluid">
-                                    <% } %>
+                                    <% } %>                                    
                                 </div>
                                 <div class="col col-lg-8 col-md-8 col-sm-6 cols-12 text-center">
                                     <h3 class="card-title mx-auto link" data-id="<%= datos.id_evento %>">
@@ -69,7 +69,7 @@
                                     <p class="card-text mx text-<%= datos.estado_inscripcion === 'inscrito' ? 'success' : 'warning' %>">
                                         Estado: <%= datos.estado_inscripcion === 'inscrito' ? 'Inscrito' : 'Lista de espera' %>
                                     </p>
-                                    <button type="button" class="link btn btn-danger w-50" data-id="<%= datos.id_evento %>" id="desapuntarse-<%= datos.id_evento %>" >Desapuntarse</button>
+                                    <button type="button" class="link btn btn-danger w-50" data-id="<%= datos.id %>" id="desapuntarse-<%= datos.id %>" >Desapuntarse</button>
                                 </div>
                             </div>
                         </div>

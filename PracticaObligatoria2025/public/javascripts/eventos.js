@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $(".inscripcion").click(function () {
         const idEvento = $(this).data("id");
-        console.log("ID del evento enviado:", idEvento);
 
         $.ajax({
             url: "/eventos/inscribirse",
@@ -29,9 +28,8 @@ $(document).ready(function () {
     $("[id^=desapuntarse-]").click(function () {
         const button = $(this);
         const idEvento = button.data("id");
-
-        console.log("ID del evento enviado para desapuntarse:", idEvento);
-
+        console.log("ID del evento para desapuntarse:", idEvento);
+        console.log("Se mete aqui");
         if (!idEvento) {
             toastr.error("Error: No se pudo obtener el ID del evento.");
             return;
@@ -43,7 +41,6 @@ $(document).ready(function () {
             type: "POST",
             data: { id: idEvento },
             success: function (response) {
-                console.log("Respuesta del servidor:", response);
                 if (response.success) {
                     showToast(response.message, 'success');
                     setTimeout(function () {
@@ -86,19 +83,22 @@ $(document).on('click', '.aceptar-lista-espera', function () {
         url: `/eventos/aceptarListaEspera/${inscripcionId}`,
         method: 'POST',
         success: function (response) {
-            alert(response.message); // Mostrar mensaje de éxito
-            location.reload(); // Recargar la página para actualizar la lista
+            showToast(response.message, 'success'); // Mostrar notificación de éxito
+            setTimeout(() => {
+                location.reload(); // Recargar la página para actualizar la lista
+            }, 3000); // Esperar a que la notificación se cierre
         },
         error: function (xhr) {
             if (xhr.status === 400) {
                 const response = JSON.parse(xhr.responseText);
-                alert(response.message); // Mostrar mensaje específico para capacidad llena
+                showToast(response.message, 'error'); // Mostrar notificación de capacidad llena
             } else {
-                alert('Ocurrió un error al aceptar la inscripción.');
+                showToast('Ocurrió un error al aceptar la inscripción.', 'error'); // Mostrar notificación genérica
             }
         }
     });
 });
+
 
 
 $(document).ready(function () {
@@ -113,10 +113,8 @@ $(document).ready(function () {
         },
         events: '/eventos/calendario',
         eventDidMount: function (info) {
-            console.log('Evento cargado:', info.event);
         },
         eventClick: function (info) {
-            console.log('Evento clickeado:', info.event);
             $.ajax({
                 url: `/eventos/inscribirse`,
                 method: 'POST',
@@ -125,24 +123,25 @@ $(document).ready(function () {
                 success: function (response) {
                     if (response.success) {
                         if (response.message === "Ya estás inscrito en este evento.") {
-                            alert(response.message);
+                            showToast(response.message, 'info');
                         } else {
-                            alert(response.message); // Mostrar mensaje según la respuesta (Éxito o Lista de espera)
+                            showToast(response.message, 'success');
                         }
-                        calendar.refetchEvents(); // Recargar eventos
+                        calendar.refetchEvents();
                     } else {
-                        alert('Error: ' + response.message);
+                        showToast('Error: ' + response.message, 'error');
                     }
                 },
                 error: function () {
-                    alert('Error al inscribirse al evento');
+                    showToast('Error al inscribirse al evento.', 'error');
                 }
             });
         }
-        
     });
+
     calendar.render();
 });
+
 
 
 
