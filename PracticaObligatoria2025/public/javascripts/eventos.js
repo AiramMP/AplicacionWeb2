@@ -1,36 +1,39 @@
 $(document).ready(function () {
     $(".inscripcion").click(function () {
         const idEvento = $(this).data("id");
-        console.log("ID del evento enviado:", idEvento); // Verifica que sea correcto
+        console.log("ID del evento enviado:", idEvento);
+
         $.ajax({
             url: "/eventos/inscribirse",
             type: "POST",
             data: { id: idEvento },
             success: function (response) {
                 if (response.success) {
-                    alert(response.message);
-                    location.reload(); // Recargar la página para reflejar los cambios
+                    showToast(response.message, 'success');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
                 } else {
-                    alert("Error: " + response.message);
+                    showToast("Error: " + response.message, 'error');
                 }
             },
             error: function () {
-                alert("Ha ocurrido un error al intentar inscribirse.");
+                showToast("Ha ocurrido un error al intentar inscribirse.", 'error');
             }
         });
     });
 });
 
+
 $(document).ready(function () {
-    // Seleccionar todos los botones que tienen un ID que comienza con "desapuntarse-"
     $("[id^=desapuntarse-]").click(function () {
         const button = $(this);
-        const idEvento = button.data("id"); // Obtener el ID del evento
+        const idEvento = button.data("id");
 
         console.log("ID del evento enviado para desapuntarse:", idEvento);
 
         if (!idEvento) {
-            alert("Error: No se pudo obtener el ID del evento.");
+            toastr.error("Error: No se pudo obtener el ID del evento.");
             return;
         }
 
@@ -40,19 +43,25 @@ $(document).ready(function () {
             type: "POST",
             data: { id: idEvento },
             success: function (response) {
+                console.log("Respuesta del servidor:", response);
                 if (response.success) {
-                    alert(response.message);
-                    location.reload(); // Recargar la página para reflejar los cambios
+                    showToast(response.message, 'success');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000);
                 } else {
-                    alert("Error: " + response.message);
+                    toastr.error("Error: " + response.message, "Error");
                 }
             },
             error: function () {
-                alert("Ha ocurrido un error al intentar desapuntarse.");
+                showToast("Ha ocurrido un error al intentar desapuntarte.", 'error');
             }
         });
     });
 });
+
+
+
 
 $(document).ready(function () {
     $('#btnCrearEvento').on('click', function () {
@@ -60,10 +69,7 @@ $(document).ready(function () {
             url: '/eventos/crearEvento',
             method: 'GET',
             success: function (data) {
-                // Cargar el modal en el DOM
                 $('body').append(data);
-
-                // Mostrar el modal
                 $('#crearEventoModal').modal('show');
             },
             error: function (err) {
@@ -135,20 +141,14 @@ $(document).ready(function () {
         }
         
     });
-    
-
-    calendar.render(); // Renderizar el calendario
+    calendar.render();
 });
 
 
 
 $(document).on('click', '.btn-historial', function () {
     const eventoId = $(this).data('id');
-
-    // Actualizar el título del modal dinámicamente
     $('#historialModalLabel').text(`Historial de Asistentes del Evento ${eventoId}`);
-
-    // Solicitud AJAX para obtener el historial
     $.ajax({
         url: `/eventos/historialAsistentes/${eventoId}`,
         method: 'GET',

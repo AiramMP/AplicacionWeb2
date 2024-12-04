@@ -55,7 +55,7 @@ router.post('/inscribirse', (req, res) => {
                 if (err) {
                     res.status(500).json({ success: false, message: "Error interno del servidor." });
                 } else if (estaInscrito) {
-                    res.json({ success: true, message: "Ya estás inscrito en este evento." });
+                    res.json({ success: false, message: "Ya estás inscrito en este evento." });
                 } else {
                     daoEventos.inscribirseEvento(usuarioId, idEvento, (err, estado) => {
                         if (err) {
@@ -145,70 +145,57 @@ router.post("/cancelarEvento", function (req, res) {
 router.post('/desapuntarse', (req, res) => {
     const daoEventos = req.daoEventos;
     const daoCorreos = req.daoCorreos;
-    const usuarioId = req.session.userId; // Usuario actual
-    const usuarioCorreo = req.session.usuario; // Correo del usuario actual
+    const usuarioId = req.session.userId;
+    const usuarioCorreo = req.session.usuario;
     const idEvento = req.body.id;
 
     if (!usuarioId || !idEvento) {
-        res.status(400).json({ success: false, message: "Faltan datos necesarios para desapuntarse." });
-        return;
+        console.error("Datos insuficientes para desapuntarse:", { usuarioId, idEvento });
+        return res.status(400).json({ success: false, message: "Faltan datos necesarios para desapuntarse." });
     }
+
+    console.log("Desapuntarse de evento:", { usuarioId, idEvento });
 
     daoEventos.obtenerDatosEvento(idEvento, (err, eventoDatos) => {
         if (err || !eventoDatos) {
-            console.error("Error al obtener datos del evento:", err);
-            res.status(500).json({ success: false, message: "Error al obtener datos del evento." });
-        } else {
-            const tituloEvento = eventoDatos.titulo; // Título del evento
+            console.error("Error al obtener datos del evento o evento no encontrado:", err);
+            return res.status(500).json({ success: false, message: "Error al obtener datos del evento." });
+        }
 
-            daoEventos.desapuntarseEvento(usuarioId, idEvento, (err) => {
-                if (err) {
-                    res.status(500).json({ success: false, message: "Error al desapuntarse del evento." });
-                } else {
-                    // Notificar al organizador
-                    daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
-                        if (!err && organizador) {
-                            const asuntoOrganizador = "Un usuario se ha desapuntado";
-                            const mensajeOrganizador = `El usuario ${usuarioCorreo} se ha desapuntado de tu evento: ${tituloEvento}.`;
-                            daoCorreos.enviarNotificacion(usuarioId, organizador.organizador_id, asuntoOrganizador, mensajeOrganizador, (err) => {
-                                if (err) {
-                                    console.error("Error al enviar notificación al organizador:", err);
-                                }
-                            });
-                        }
-                    });
+        const tituloEvento = eventoDatos.titulo;
 
-                    // Notificar al usuario
-                    const asuntoUsuario = "Te has desapuntado de un evento";
-                    const mensajeUsuario = `Has cancelado tu inscripción al evento: ${tituloEvento}.`;
+        daoEventos.desapuntarseEvento(usuarioId, idEvento, (err) => {
+            if (err) {
+                console.error("Error al desapuntarse del evento:", err);
+                return res.status(500).json({ success: false, message: "Error al desapuntarse del evento." });
+            }
 
-                    daoCorreos.enviarNotificacion(
-                        "Sistema", // Correo emisor
-                        usuarioId, // Correo receptor
-                        asuntoUsuario,
-                        mensajeUsuario,
-                        (err) => {
-                            if (err) {
-                                console.error("Error al enviar notificación al usuario:", err);
-                            }
-                        }
-                    );
+            console.log("Usuario desapuntado con éxito:", usuarioId);
 
-                    res.json({
-                        success: true,
-                        message: "Te has desapuntado del evento exitosamente."
+            // Notificar al organizador
+            daoEventos.obtenerDatosOrganizador(idEvento, (err, organizador) => {
+                if (!err && organizador) {
+                    const asuntoOrganizador = "Un usuario se ha desapuntado";
+                    const mensajeOrganizador = `El usuario ${usuarioCorreo} se ha desapuntado de tu evento: ${tituloEvento}.`;
+                    daoCorreos.enviarNotificacion(usuarioId, organizador.organizador_id, asuntoOrganizador, mensajeOrganizador, (err) => {
+                        if (err) console.error("Error al enviar notificación al organizador:", err);
                     });
                 }
             });
-        }
+
+            // Notificar al usuario
+            const asuntoUsuario = "Te has desapuntado de un evento";
+            const mensajeUsuario = `Has cancelado tu inscripción al evento: ${tituloEvento}.`;
+
+            daoCorreos.enviarNotificacion("Sistema", usuarioId, asuntoUsuario, mensajeUsuario, (err) => {
+                if (err) console.error("Error al enviar notificación al usuario:", err);
+            });
+
+            console.log("castaña");
+            res.json({success: true, message: "Te has desapuntado del evento exitosamente."});
+        });
     });
 });
-
-
-
-
-
-
 
 
 

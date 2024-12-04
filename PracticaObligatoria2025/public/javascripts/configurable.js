@@ -60,29 +60,29 @@ $(document).ready(function () {
         });
     }
 
-    // Guardar configuraciones de accesibilidad
     $(document).on('click', '#guardarConfiguracion', function () {
         const configuracion = {
             paleta_colores: $('#sectionColor').val(),
             tamano_texto: $('#fontSize').val()
         };
-
+    
         $.ajax({
             url: '/accesibilidad/guardar',
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(configuracion),
             success: function () {
-                alert('Configuración guardada exitosamente.');
+                showToast('Configuración guardada exitosamente.', 'success');
                 $('#configModal').modal('hide'); // Cerrar el modal
                 aplicarPaletaColores(configuracion.paleta_colores);
                 aplicarTamanoTexto(configuracion.tamano_texto);
             },
             error: function () {
-                alert('Error al guardar la configuración.');
+                showToast('Error al guardar la configuración.', 'error');
             }
         });
     });
+    
 
     // Aplicar la paleta de colores en tiempo real
     $(document).on('change', '#sectionColor', function () {
