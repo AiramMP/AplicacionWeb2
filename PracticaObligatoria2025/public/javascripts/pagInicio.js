@@ -12,7 +12,6 @@ $(function(){
         var mostrar = $("#visibilidadlog").data("mostrar");
         mostrar = !mostrar;
         $(this).text(mostrar ? "Ocultar" : "Mostrar");
-
         $(this).data("mostrar", mostrar);
         var passwordField = $("#passwordlog");
         passwordField.attr("type", passwordField.attr("type") === "password" ? "text" : "password");

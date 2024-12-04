@@ -30,7 +30,6 @@ router.post('/comprobarpassword', function (req, res) {
       } else if (!data) {
           res.status(400).send("Credenciales inválidas");
       } else {
-        console.log(data[0]);
           const user = data[0];
           req.session.userId = user.id; // Guardar el ID del usuario en la sesión
           req.session.usuario = user.correo;
@@ -38,7 +37,6 @@ router.post('/comprobarpassword', function (req, res) {
           req.session.nombre = user.nombre;
           req.session.rol = user.rol;
 
-          console.log("Sesión iniciada:", req.session);
           res.json(user); // Responder al cliente con los datos del usuario
       }
   });
@@ -85,7 +83,6 @@ router.post('/signin', function(request, response) {
               message: "Error en el sistema de sesiones"
             });
           } else {
-            console.log("Sesión guardada correctamente:", request.session);
             response.redirect('/usuarios/');
           }
         });
@@ -96,7 +93,6 @@ router.post('/signin', function(request, response) {
 
 
 router.post('/login', function(request, response) {
-  console.log("Antes de guardar en sesión:", request.body);
 
   request.session.usuario = request.body.correo;
 

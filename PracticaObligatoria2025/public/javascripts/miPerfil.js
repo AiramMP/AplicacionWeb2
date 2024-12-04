@@ -1,7 +1,4 @@
 $(function(){
-    /*$("#miFoto").on('click',function(){
-        $("#uploadModal").modal('show');
-    })*/
 
     $("#miFoto").on('click keypress', function (event) {
         if (event.type === 'click' || (event.type === 'keypress' && event.key === 'Enter')) {

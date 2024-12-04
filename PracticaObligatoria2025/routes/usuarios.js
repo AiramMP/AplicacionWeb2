@@ -20,8 +20,6 @@ router.get('/', function(request, response){
                 error:"No se pudo cargar los eventos de la universidad"
             })
         }else{
-            console.log("Importante");
-            console.log(request.session);
             response.render('eventos', {eventos:datos,
                 foto:request.session.foto,
                 configuracionAccesibilidad: request.session.configuracionAccesibilidad || {},

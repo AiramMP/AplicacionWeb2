@@ -45,38 +45,6 @@ router.get('/misnotificaciones', function (req, res) {
 });
 
 
-// Ruta para ver un correo específico
-/*router.get('/ver/:id', function (req, res) {
-    if (!req.session.userId) {
-        return res.redirect('/');
-    }
-
-    const dao = req.daoCorreos;
-    const correoId = req.params.id;
-    const receptorId = req.session.userId; // ID del usuario logueado
-
-    dao.verCorreo(correoId, receptorId, function (err, correo) {
-        if (err || !correo) {
-            console.error("Error al obtener el correo:", err || "Correo no encontrado");
-            res.redirect('/correos/misnotificaciones');
-        } else {
-            // Marcar el correo como visto
-            dao.marcarComoVisto(correoId, function (err) {
-                if (err) {
-                    console.error("Error al marcar correo como visto:", err);
-                }
-                res.render('verCorreo', {
-                    correo,
-                    foto: req.session.foto,
-                    nombre: req.session.nombre,
-                    usuario: req.session.usuario,
-                    rol: req.session.rol,
-                });
-            });
-        }
-    });
-});*/
-
 router.get("/verNotificacion/:id", (req, res) => {
     const correoId = req.params.id;
     const dao = req.daoCorreos;

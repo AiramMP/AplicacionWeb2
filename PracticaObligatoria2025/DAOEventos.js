@@ -33,7 +33,6 @@ class DAOEventos {
     
 
     inscribirseEvento(usuarioId, id_evento, callback) {
-        console.log("Entrando a inscribirseEvento con usuarioId:", usuarioId, "y id_evento:", id_evento);
     
         this.pool.getConnection(function (err, connection) {
             if (err) {
@@ -51,7 +50,6 @@ class DAOEventos {
                         connection.release();
                         callback(err);
                     } else if (resultados.length > 0) {
-                        console.log("Usuario ya inscrito o en lista de espera para este evento.");
                         connection.release();
                         callback(null, "ya_inscrito"); // Devuelve un estado especial
                     } else {
@@ -67,9 +65,7 @@ class DAOEventos {
                                 connection.release();
                                 callback(new Error("Evento no encontrado"));
                             } else {
-                                const capacidadRestante = resultado[0].capacidad_restante;
-                                console.log("Capacidad restante del evento:", capacidadRestante);
-    
+                                const capacidadRestante = resultado[0].capacidad_restante; 
                                 if (capacidadRestante > 0) {
                                     const sqlInsertar = `
                                         INSERT INTO inscripciones (usuario_id, evento_id, estado_inscripcion, fecha_inscripcion)
@@ -81,7 +77,6 @@ class DAOEventos {
                                             connection.release();
                                             callback(err);
                                         } else {
-                                            console.log("Usuario inscrito exitosamente.");
                                             const sqlUpdate = `
                                                 UPDATE eventos SET capacidad_restante = capacidad_restante - 1
                                                 WHERE id = ?
@@ -105,7 +100,7 @@ class DAOEventos {
                                         if (err) {
                                             console.error("Error al insertar en lista de espera:", err);
                                         } else {
-                                            console.log("Usuario añadido a lista de espera.");
+                                            //console.log("Usuario añadido a lista de espera.");
                                         }
                                         callback(err, "lista_de_espera"); // Devuelve el estado
                                     });
@@ -141,7 +136,6 @@ class DAOEventos {
                         callback(new Error("No estás inscrito en este evento."));
                     } else {
                         const estadoInscripcion = resultados[0].estado_inscripcion;
-                        console.log("Estado de inscripción:", estadoInscripcion);
     
                         // Eliminar la inscripción del usuario
                         const sqlEliminar = `
@@ -170,14 +164,13 @@ class DAOEventos {
                                         console.error("Error al actualizar capacidad restante:", err);
                                         callback(err);
                                     } else {
-                                        console.log("Capacidad restante actualizada y usuario desapuntado.");
+                                        //console.log("Capacidad restante actualizada y usuario desapuntado.");
                                         callback(null);
                                     }
                                 });
                             } else {
                                 // Liberar conexión si estaba en la lista de espera (no se actualiza capacidad)
                                 connection.release();
-                                console.log("Usuario desapuntado. No se actualizó capacidad porque estaba en lista de espera.");
                                 callback(null);
                             }
                         });
@@ -232,7 +225,6 @@ class DAOEventos {
                             console.error("Error al crear el evento:", err);
                             callback(err);
                         } else {
-                            console.log("Evento creado exitosamente con ID:", resultado.insertId);
                             callback(null, resultado.insertId); // Devuelve el ID del evento creado
                         }
                     }
@@ -326,6 +318,30 @@ class DAOEventos {
             }
         });
     }
+
+    obtenerDatosEvento(idEvento, callback) {
+        this.pool.getConnection((err, connection) => {
+            if (err) {
+                callback(err, null);
+            } else {
+                const sql = `
+                    SELECT titulo
+                    FROM eventos
+                    WHERE id = ?
+                `;
+                connection.query(sql, [idEvento], (err, resultados) => {
+                    connection.release();
+                    if (err || resultados.length === 0) {
+                        callback(err || new Error("Evento no encontrado"), null);
+                    } else {
+                        callback(null, resultados[0]); // Retorna el evento
+                    }
+                });
+            }
+        });
+    }
+    
+    
     
     
     obtenerEvento(id, callback) {

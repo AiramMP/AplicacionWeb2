@@ -14,7 +14,6 @@
     font-size:1.5rem;
 }
 
-/* Ajustes para el tamaño del texto */
 .texto-pequeno .card-text,
 .texto-pequeno .card-title {
     font-size: 1rem;
@@ -30,7 +29,6 @@
     font-size: 2rem;
 }
 
-/* Ajustes para el tamaño de las imágenes */
 .texto-pequeno .card img {
     max-width: 80%;
     height: auto;

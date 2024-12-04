@@ -12,7 +12,7 @@ html, body {
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Oculta cualquier contenido que desborde horizontalmente */
+  overflow-x: hidden; 
 }
 
 
@@ -22,7 +22,7 @@ header, .navbar {
 }
 
 .navbar-nav {
-  flex-wrap: wrap; /* Permite que los elementos se envuelvan si son demasiados */
+  flex-wrap: wrap; 
 }
 
 .navbar-nav li:first-child {
@@ -31,7 +31,7 @@ header, .navbar {
 
 
 .nav-item {
-  max-width: 100%; /* Evita que desborde individualmente */
+  max-width: 100%; 
 }
 
 .container-fluid {
@@ -40,9 +40,6 @@ header, .navbar {
   max-width: 100% !important;
 }
 
-
-
-/* Contenedor principal del contenido */
 .container-fluid {
   flex: 1;
 }

@@ -1,6 +1,5 @@
 $(document).on('click', '.list-group-item', function () {
     const correoId = $(this).data('id'); // Obtener el ID del correo
-    console.log('Clic detectado en notificación con ID:', correoId);
 
     // Solicitar el modal para el correo
     $.ajax({
